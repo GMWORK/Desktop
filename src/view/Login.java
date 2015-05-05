@@ -5,17 +5,26 @@
  */
 package view;
 
+import controller.PersistencyController;
+import controller.PersistencyWeb;
+import javax.swing.JFrame;
+
 /**
  *
  * @author mateo
  */
-public class Login extends javax.swing.JFrame {
+public class Login extends JFrame {
+
+    private PersistencyController per;
+    private PersistencyWeb perWeb;
 
     /**
      * Creates new form Login
      */
     public Login() {
+        per = new PersistencyController();
         initComponents();
+
     }
 
     /**
@@ -27,7 +36,7 @@ public class Login extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
+        jButtonLogin = new javax.swing.JButton();
         jTextFieldUsername = new javax.swing.JTextField();
         jTextFieldPassword = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -36,10 +45,10 @@ public class Login extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jButton1.setText("Login!");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLogin.setText("Login!");
+        jButtonLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jButtonLoginActionPerformed(evt);
             }
         });
 
@@ -66,7 +75,7 @@ public class Login extends javax.swing.JFrame {
                         .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(169, 169, 169)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(69, 142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -82,16 +91,22 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jTextFieldPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addGap(34, 34, 34)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(48, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
+    private void jButtonLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginActionPerformed
+        if (per.hacerLogin(jTextFieldUsername.getText(), jTextFieldPassword.getText())) {
+            // TODO add your handling code here:
+            this.setVisible(false);
+            Menu menu = new Menu(per);
+        } else {
+            PopupError pop = new PopupError("Error Autenticacion Erronea");
+        }
+    }//GEN-LAST:event_jButtonLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -129,7 +144,7 @@ public class Login extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButtonLogin;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

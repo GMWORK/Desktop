@@ -6,6 +6,7 @@
 package model;
 
 import java.awt.Image;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,12 +14,12 @@ import java.util.List;
  *
  * @author mateo
  */
-public class Producto {
+public class Producto implements Serializable {
 
     private long id;
     private String nombre;
     private double precio;
-    private Image img;
+    private byte[] img;
     private boolean inhabilitats;
     private double descuento;
     private Categoria categoria;
@@ -27,7 +28,7 @@ public class Producto {
     public Producto() {
     }
 
-    public Producto(String nombre, double precio, Image img, boolean inhabilitats, double descuento) {
+    public Producto(String nombre, double precio, byte[] img, boolean inhabilitats, double descuento) {
         this.nombre = nombre;
         this.precio = precio;
         this.img = img;
@@ -59,11 +60,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public Image getImg() {
+    public byte[] getImg() {
         return img;
     }
 
-    public void setImg(Image img) {
+    public void setImg(byte[] img) {
         this.img = img;
     }
 

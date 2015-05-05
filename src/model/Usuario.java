@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author mateo
  */
-public class Usuario {
+public class Usuario  implements Serializable {
 
     private long id;
     private String nif;
@@ -101,6 +102,14 @@ public class Usuario {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isAdministrador() {
+        return administrador;
+    }
+
+    public void setAdministrador(boolean administrador) {
+        this.administrador = administrador;
     }
 
     public List getClientes() {

@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author mateo
  */
-public class Cliente {
+public class Cliente implements Serializable {
     
     private long id;
     private String nif;

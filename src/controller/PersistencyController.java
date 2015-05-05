@@ -5,8 +5,13 @@
  */
 package controller;
 
-import java.awt.Image;
+import controller.dao.CategoriaDAOController;
+import controller.dao.ClienteDAOController;
+import controller.dao.PedidoDAOController;
+import controller.dao.ProductoDAOController;
+import controller.dao.UsuarioDAOController;
 import java.awt.Rectangle;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeMap;
@@ -16,6 +21,9 @@ import model.Cliente;
 import model.Pedido;
 import model.Producto;
 import model.Usuario;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import util.HibernateUtil;
 
 /**
  *
@@ -23,7 +31,41 @@ import model.Usuario;
  */
 public class PersistencyController {
 
-    public void hacerLogin(String username, String password) {
+    private UsuarioDAOController usuDAO;
+    private ProductoDAOController proDAO;
+    private PedidoDAOController peDAO;
+    private ClienteDAOController cliDAO;
+    private CategoriaDAOController catDAO;
+
+    public PersistencyController() {
+        if (usuDAO == null) {
+            usuDAO = new UsuarioDAOController();
+        }
+        if (proDAO == null) {
+            proDAO = new ProductoDAOController();
+        }
+        if (peDAO == null) {
+            peDAO = new PedidoDAOController();
+        }
+        if (cliDAO == null) {
+            cliDAO = new ClienteDAOController();
+        }
+        if (catDAO == null) {
+            catDAO = new CategoriaDAOController();
+        }
+    }
+
+    public boolean hacerLogin(String username, String password) {
+        Usuario usu = new Usuario();
+
+        usu.setUsername(username);
+        usu.setPassword(password);
+        usuDAO.addUsuario(usu);
+        if (usuDAO.filtrarUsuario(usu) != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void guardarDatosBajados() {
@@ -32,10 +74,10 @@ public class PersistencyController {
     public void removeProducto(String nombre) {
     }
 
-    public void editarProducto(String nombre, double precio, Image img, boolean inhabilitats, double descuento, Categoria categoria) {
+    public void editarProducto(String nombre, double precio, byte[] img, boolean inhabilitats, double descuento, Categoria categoria) {
     }
 
-    public void crearProducto(String nombre, double precio, Image img, boolean inhabilitats, double descuento, Categoria categoria) {
+    public void crearProducto(String nombre, double precio, byte[] img, boolean inhabilitats, double descuento, Categoria categoria) {
     }
 
     public ArrayList<Producto> mostrarProducto() {
