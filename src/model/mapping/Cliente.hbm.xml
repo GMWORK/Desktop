@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="model.Cliente" table="CLIENTE">
+        <id name="id">
+            <generator class="identity"/>
+        </id>
+        <property name="nif"/>
+        <property name="nombre"/>
+        <property name="apellidos"/>
+        <property name="longitud"/>
+        <property name="latitud"/>
+        <property name="calle"/>
+        <property name="poblacion"/>
+        <property name="proximaVisita"/>
+        <many-to-one name="usuario"/>
+        <list name="pedido" cascade="all-delete-orphan">
+            <key column="ID_CLIENTE"/>
+            <index column="ORDEN"/>
+            <one-to-many class="model.Pedido"/>
+        </list>
+    </class>
+</hibernate-mapping>

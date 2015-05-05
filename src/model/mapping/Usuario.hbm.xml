@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="model.Usuario" table="USUARIO">
+        <id name="id">
+            <generator class="identity"/>
+        </id>
+        <property name="nif"/>
+        <property name="nombre"/>
+        <property name="apellidos"/>
+        <property name="calle"/>
+        <property name="poblacion"/>
+        <property name="administrador"/>
+        <property name="username"/>
+        <property name="password"/>
+        <list name="clientes" cascade="all-delete-orphan">
+            <key column="ID_USUARIO"/>
+            <index column="ORDEN"/>
+            <one-to-many class="model.Cliente"/>
+        </list>
+    </class>
+</hibernate-mapping>
