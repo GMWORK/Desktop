@@ -106,8 +106,11 @@ public class UsuarioDAOController extends AbstractDAO {
 
         try {
             startOperation();
-//            usuario = sesion.createQuery("from Usuario u where u.username = " + cat.getUsername() + " and u.password = " + cat.getPassword() + "").list();
-              usuario = sesion.createQuery("from Usuario u where u.username like '"+cat.getUsername()+ "' and u.password like '"+ cat.getPassword()+"' ").list();
+            usuario = sesion.createQuery("from Usuario u where u.username like ? and u.password like ?")
+                    .setParameter(0, cat.getUsername())
+                    .setParameter(1, cat.getPassword())
+                    .list();
+//usuario = sesion.createQuery("from Usuario u where u.username like '"+cat.getUsername()+ "' and u.password like '"+ cat.getPassword()+"' ").list();
         } finally {
             finishOperation();
         }
