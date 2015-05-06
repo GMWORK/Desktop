@@ -8,17 +8,21 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 /**
  *
  * @author mateo
  */
-public class Categoria implements Serializable{
+public class Categoria implements Serializable {
 
     private long id;
     private String nombre;
     private double descuento;
     private List productos = new ArrayList<Producto>();
+    String[] labels = new String[]{"id", "nombre", "descuento", "productos"};
+    Vector<String> tableHeaders;
+    Vector tableData;
 
     public Categoria() {
     }
@@ -63,6 +67,30 @@ public class Categoria implements Serializable{
     public void addProducto(Producto pro) {
         this.productos.add(pro);
         pro.setCategoria(this);
-         
+
     }
+
+    public String[] getLabels() {
+        return labels;
+    }
+
+    public Vector<String> getTableHeaders() {
+        tableHeaders = new Vector<String>();
+        tableHeaders.add("ID");
+        tableHeaders.add("NOMBRE");
+        tableHeaders.add("DESCUENTO");
+        tableHeaders.add("PRODUCTOS");
+        return tableHeaders;
+    }
+
+    public Vector getTableData() {
+        Vector<Object> oneRow = new Vector<Object>();
+        oneRow.add(this.getId());
+        oneRow.add(this.getNombre());
+        oneRow.add(this.getDescuento());
+        oneRow.add(this.getProductos());
+        tableData.add(oneRow);
+        return tableData;
+    }
+
 }

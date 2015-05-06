@@ -1,27 +1,47 @@
-package view;
-
-import controller.PersistencyController;
-
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/**
- *
- * @author mateo
- */
-public class Menu extends javax.swing.JFrame {
-    
-    private static PersistencyController per;
+package view;
 
-    /**
-     * Creates new form Menu
-     */
+import controller.PersistencyController;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import model.Categoria;
+import model.Usuario;
+
+public class Menu extends javax.swing.JFrame {
+
+    private Object dog;
+    private  static PersistencyController per;
+    private List tabla;
+
     public Menu(PersistencyController per) {
         this.per = per;
         initComponents();
-        this.setVisible(true);
+        itemSelect.removeAllItems();
+        for (Object a : per.getTableNames()) {
+            itemSelect.addItem(a);
+        }
+        JTextConsulta.setVisible(false);
+        Dropdownlist2.setVisible(false);
+        Filtrar.setVisible(false);
     }
 
     /**
@@ -33,21 +53,629 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        itemSelect = new javax.swing.JComboBox();
+        jLabel1 = new javax.swing.JLabel();
+        selectButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        selectButton1 = new javax.swing.JButton();
+        selectButton3 = new javax.swing.JButton();
+        selectButton4 = new javax.swing.JButton();
+        Dropdownlist2 = new javax.swing.JComboBox();
+        JTextConsulta = new javax.swing.JTextField();
+        Filtrar = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        itemSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        itemSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSelectActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Taula");
+
+        selectButton.setText("Consulta");
+        selectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButtonActionPerformed(evt);
+            }
+        });
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.getTableHeader().setReorderingAllowed(false);
+        jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        selectButton1.setText("Insertar");
+        selectButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButton1ActionPerformed(evt);
+            }
+        });
+
+        selectButton3.setText("Esborrar");
+        selectButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButton3ActionPerformed(evt);
+            }
+        });
+
+        selectButton4.setText("Modificar");
+        selectButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectButton4ActionPerformed(evt);
+            }
+        });
+
+        Dropdownlist2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        Filtrar.setText("Filtrar");
+        Filtrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FiltrarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 679, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(itemSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(selectButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(selectButton3)
+                .addGap(24, 24, 24))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(197, 197, 197)
+                .addComponent(Dropdownlist2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addComponent(JTextConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(Filtrar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(itemSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(selectButton1)
+                    .addComponent(selectButton3)
+                    .addComponent(selectButton4)
+                    .addComponent(jLabel1)
+                    .addComponent(selectButton))
+                .addGap(28, 28, 28)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(JTextConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Dropdownlist2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Filtrar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void selectButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton4ActionPerformed
+        
+        if (jTable1.getSelectedRow() > -1) {
+            JFrame jframe = new JFrame();
+            JPanel jpanel = new JPanel();
+            jframe.setSize(new Dimension(250, 400));
+            jpanel.setSize(new Dimension(200, 200));
+            jpanel.setVisible(true);
+            jpanel.setBounds(50, 50, 50, 50);
+            jframe.setVisible(true);
+            jframe.add(jpanel);
+
+            if (dog instanceof Empresa) {
+                Object datos = tabla.get(jTable1.getSelectedRow());
+                String[] labels = new String[]{"id", "nif", "name", "adreca"};
+                rellenarFrameEditar(datos, jpanel, labels);
+            } else if (dog instanceof Oferta) {
+                Object datos = tabla.get(jTable1.getSelectedRow());
+                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
+                rellenarFrameEditar(datos, jpanel, labels);
+            } else if (dog instanceof Treballador) {
+                Object datos = tabla.get(jTable1.getSelectedRow());
+                String[] labels = new String[]{"id", "name", "age", "localitation"};
+                rellenarFrameEditar(datos, jpanel, labels);
+            }
+        } else {
+            JFrame jframe = new JFrame();
+            jframe.setSize(new Dimension(200, 100));
+            JPanel jpanel = new JPanel();
+            jpanel.setVisible(true);
+            jpanel.setBounds(50, 50, 50, 50);
+            jframe.setVisible(true);
+            jframe.add(jpanel);
+            JLabel text = new JLabel("Selecciona un registre");
+            jpanel.add(text);
+            JButton boto = new JButton("aceptar");
+            jpanel.add(boto);
+            boto.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+        }
+    }//GEN-LAST:event_selectButton4ActionPerformed
+
+    private void selectButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton3ActionPerformed
+        Object obj = tabla.get(jTable1.getSelectedRow());
+        JFrame jframe = new JFrame();
+        jframe.setSize(new Dimension(200, 100));
+        JPanel jpanel = new JPanel();
+        jpanel.setVisible(true);
+        jpanel.setBounds(50, 50, 50, 50);
+        jframe.setVisible(true);
+        jframe.add(jpanel);
+        JLabel text = new JLabel("Borrar??");
+        jpanel.add(text);
+        JButton aceptar = new JButton("Sí");
+        jpanel.add(aceptar);
+        JButton cancelar = new JButton("No");
+        jpanel.add(cancelar);
+        aceptar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                per.remove(obj);
+                jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+        cancelar.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+    }//GEN-LAST:event_selectButton3ActionPerformed
+
+    private void selectButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton1ActionPerformed
+
+        try {
+            Object selected = itemSelect.getSelectedItem();
+            String a = selected.toString();
+            String b[] = a.split("\\.");
+            Class<?> c;
+            c = Class.forName("model." + b[b.length - 1]);
+            System.out.println(c);
+            dog = c.newInstance();
+
+            JFrame jframe = new JFrame();
+            JPanel jpanel = new JPanel();
+            jframe.setSize(new Dimension(250, 300));
+            jpanel.setVisible(true);
+            jpanel.setBounds(50, 50, 50, 50);
+            jframe.setVisible(true);
+            jframe.add(jpanel);
+
+            if (dog instanceof Empresa) {
+                String[] labels = new String[]{"id", "nif", "name", "adreca"};
+                rellenarFrame(dog, jpanel, labels);
+            } else if (dog instanceof Oferta) {
+                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
+                rellenarFrame(dog, jpanel, labels);
+            } else if (dog instanceof Treballador) {
+                String[] labels = new String[]{"id", "name", "age", "localitation"};
+                rellenarFrame(dog, jpanel, labels);
+            }
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }//GEN-LAST:event_selectButton1ActionPerformed
+
+    private void selectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButtonActionPerformed
+        try {
+            JTextConsulta.setVisible(true);
+            Dropdownlist2.setVisible(true);
+            Filtrar.setVisible(true);
+            Object selected = itemSelect.getSelectedItem();
+            String a = selected.toString();
+            System.out.println(a);
+            String b[] = a.split("\\.");
+            System.out.println(b.length);
+            Class<?> c = Class.forName("hibernate.relaciones." + b[b.length - 1]);
+            System.out.println(c);
+            dog = c.newInstance();
+
+            if (dog instanceof Empresa) {
+
+                tabla = llenar.getDao().getEntityList(dog.getClass());
+                refreshTableEmpresa(tabla);
+                String[] labels = new String[]{"id", "nif", "name", "adreca"};
+
+                Dropdownlist2.removeAllItems();
+                for (String dato : labels) {
+                    Dropdownlist2.addItem(dato);
+                }
+
+            } else if (dog instanceof Oferta) {
+
+                tabla = llenar.getDao().getEntityList(dog.getClass());
+                refreshTableOferta(tabla);
+                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
+                Dropdownlist2.removeAllItems();
+                for (String dato : labels) {
+                    Dropdownlist2.addItem(dato);
+                }
+            } else if (dog instanceof Treballador) {
+
+                tabla = llenar.getDao().getEntityList(dog.getClass());
+                refreshTableTreballador(tabla);
+                String[] labels = new String[]{"id", "name", "age", "localitation"};
+                Dropdownlist2.removeAllItems();
+                for (String dato : labels) {
+                    Dropdownlist2.addItem(dato);
+                }
+            }
+            System.out.println(dog);
+
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_selectButtonActionPerformed
+
+    private void itemSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSelectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_itemSelectActionPerformed
+
+    public static void success() {
+        Message message = new Message("Correcte","Insercio Correcte","Aceptar");
+    }
+
+    private void FiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltrarActionPerformed
+        if (dog instanceof Categoria) {
+            tabla = per.filtrarCategoria(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+            refreshTableEmpresa(tabla);
+        } else if (dog instanceof Usuario) {
+            tabla = per.filtrarUsuario(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());
+            refreshTableOferta(tabla);
+        } else if (dog instanceof Treballador) {
+            tabla = llenar.getDao().filtrar(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText(), dog.getClass());
+            refreshTableTreballador(tabla);
+        }
+    }//GEN-LAST:event_FiltrarActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        Background AplicarFondo = new Background();
+        this.add(AplicarFondo, BorderLayout.SOUTH);
+        AplicarFondo.repaint();
+    }//GEN-LAST:event_formWindowOpened
+    public void rellenarFrame(Object dog, JPanel panel, String[] labels) {
+        JLabel jlab = null;
+        JTextField jtex = new JTextField(20);
+        for (int i = 1; i < labels.length; i++) {
+            jlab = new JLabel(labels[i]);
+            jtex = new JTextField(20);
+            panel.add(jlab);
+            panel.add(jtex);
+            jlab.setLocation(12, ((i + 1) * 10));
+            jtex.setLocation(26, ((i + 1) * 10));
+        }
+        JButton jbutt = new JButton("envia");
+        jbutt.setLocation(panel.getWidth() / 2, 40);
+        panel.add(jbutt);
+        jbutt.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Boolean error = false;
+                ArrayList list = new ArrayList();
+                for (int i = 0; i < panel.getComponents().length; i++) {
+                    if (panel.getComponent(i) instanceof JTextField) {
+                        JTextField m = (JTextField) panel.getComponent(i);
+                        if (!m.getText().isEmpty()) {
+                            list.add(m.getText());
+                        } else {
+                            error = true;
+                        }
+                    }
+                }
+                if (!error) {
+                    if (dog instanceof Empresa) {
+                        Empresa emp = new Empresa();
+                        emp.setNif((String) list.get(0));
+                        emp.setName((String) list.get(1));
+                        emp.setAdreca((String) list.get(2));
+                        llenar.getDao().insert(emp);
+                        success();
+                    } else if (dog instanceof Oferta) {
+                        Oferta emp = new Oferta();
+                        emp.setNomCarrec((String) list.get(0));
+                        emp.setSou(Integer.parseInt((String) list.get(1)));
+                        emp.setDisponible(Boolean.parseBoolean((String) list.get(2)));
+                        llenar.getDao().insert(emp);
+                        success();
+                    } else if (dog instanceof Treballador) {
+                        Treballador emp = new Treballador();
+                        emp.setName((String) list.get(0));
+                        emp.setAge(Integer.parseInt((String) list.get(1)));
+                        emp.setLocalitation((String) list.get(2));
+                        llenar.getDao().insert(emp);
+                        success();
+                    }
+                } else {
+                    JFrame jframe = new JFrame();
+                    jframe.setSize(new Dimension(200, 100));
+                    JPanel jpanel = new JPanel();
+                    jpanel.setVisible(true);
+                    jpanel.setBounds(50, 50, 50, 50);
+                    jframe.setVisible(true);
+                    jframe.add(jpanel);
+                    JLabel text = new JLabel("Introdueix tots els camps");
+                    jpanel.add(text);
+                    JButton boto = new JButton("aceptar");
+                    jpanel.add(boto);
+                    boto.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void rellenarFrameEditar(Object dog, JPanel panel, String[] labels) {
+        JLabel jlab = null;
+        JTextField jtex = new JTextField(20);
+        List valores = new ArrayList();
+        JComboBox jcom = new JComboBox();
+        JComboBox jcom2 = new JComboBox();
+        if (dog instanceof Empresa) {
+            Empresa emp = (Empresa) dog;
+            valores.add(emp.getId());
+            valores.add(emp.getNif());
+            valores.add(emp.getName());
+            valores.add(emp.getAdreca());
+        } else if (dog instanceof Oferta) {
+            Oferta emp = (Oferta) dog;
+            valores.add(emp.getId());
+            valores.add(emp.getNomCarrec());
+            valores.add(String.valueOf(emp.getSou()));
+            valores.add(String.valueOf(emp.isDisponible()));
+            valores.add(emp.getEmpresa());
+            valores.add(emp.getTreballador());
+            valores.add(llenar.getDao().getEntityList(Treballador.class));
+        } else if (dog instanceof Treballador) {
+            Treballador emp = (Treballador) dog;
+            valores.add(emp.getId());
+            valores.add(emp.getName());
+            valores.add(String.valueOf(emp.getAge()));
+            valores.add(emp.getLocalitation());
+
+        }
+        jlab = new JLabel("ID");
+        jtex = new JTextField(20);
+
+        jtex.setEditable(false);
+        panel.add(jlab);
+        panel.add(jtex);
+        jtex.setText(String.valueOf(valores.get(0)));
+        jlab.setLocation(12, 10);
+        jtex.setLocation(26, 10);
+        for (int i = 1; i < labels.length; i++) {
+            jlab = new JLabel(labels[i]);
+            jtex = new JTextField(20);
+            panel.add(jlab);
+            panel.add(jtex);
+            jtex.setText((String) valores.get(i));
+            jlab.setLocation(12, ((i) * 10));
+            jtex.setLocation(26, ((i) * 10));
+        }
+        if (dog instanceof Oferta) {
+            jlab = new JLabel("Empresa");
+            jcom = new JComboBox();
+            for (Empresa valor : llenar.getDao().getEntityList(Empresa.class)) {
+                jcom.addItem(valor);
+            }
+            panel.add(jlab);
+            jlab = new JLabel("Treballador");
+            jcom2 = new JComboBox();
+            for (Treballador valor : llenar.getDao().getEntityList(Treballador.class)) {
+                jcom2.addItem(valor);
+            }
+            panel.add(jcom);
+            panel.add(jlab);
+            panel.add(jcom2);
+        }
+        JButton jbutt = new JButton("envia");
+        jbutt.setLocation(panel.getWidth() / 2, 40);
+        panel.add(jbutt);
+        jbutt.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Boolean error = false;
+                ArrayList list = new ArrayList();
+                for (int i = 0; i < panel.getComponents().length; i++) {
+                    if (panel.getComponent(i) instanceof JTextField) {
+                        JTextField m = (JTextField) panel.getComponent(i);
+                        if (!m.getText().isEmpty()) {
+                            list.add(m.getText());
+                        } else {
+                            error = true;
+                        }
+                    }
+                    if (panel.getComponent(i) instanceof JComboBox) {
+                        JComboBox m = (JComboBox) panel.getComponent(i);
+                        Object obj = m.getSelectedItem();
+                        if (obj instanceof Empresa) {
+                            Empresa em = (Empresa) obj;
+                            list.add(em.getName());
+                        }
+                        if (obj instanceof Treballador) {
+                            Treballador t = (Treballador) obj;
+                            list.add(t.getName());
+                        }
+                    }
+                }
+                if (!error) {
+                    if (dog instanceof Empresa) {
+                        llenar.getDao().updateEmpresa(Long.parseLong((String) list.get(0)), (String) list.get(1), (String) list.get(2), (String) list.get(3));
+                        success();
+                    } else if (dog instanceof Oferta) {
+                        llenar.getDao().updateOferta(Long.parseLong((String) list.get(0)), (String) list.get(1), Integer.parseInt((String) list.get(2)), Boolean.parseBoolean((String) list.get(3)), (String) list.get(4), (String) list.get(5));
+                        success();
+                    } else if (dog instanceof Treballador) {
+                        llenar.getDao().updateTreballador(Long.parseLong((String) list.get(0)), (String) list.get(1), Integer.parseInt((String) list.get(2)), (String) list.get(3));
+                        success();
+                    }
+                } else {
+                    JFrame jframe = new JFrame();
+                    JPanel jpanel = new JPanel();
+                    jframe.setSize(new Dimension(200, 100));
+                    jpanel.setVisible(true);
+                    jpanel.setBounds(50, 50, 50, 50);
+                    jframe.setVisible(true);
+                    jframe.add(jpanel);
+                    JLabel text = new JLabel("Introdueix tots els camps");
+                    jpanel.add(text);
+                    JButton boto = new JButton("aceptar");
+                    jpanel.add(boto);
+                    boto.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void refreshTableEmpresa(List list) {
+
+        Vector<String> tableHeaders = new Vector<String>();
+        Vector tableData = new Vector();
+        
+        for (Object o : list) {
+            Empresa actor = (Empresa) o;
+            Vector<Object> oneRow = new Vector<Object>();
+            oneRow.add(actor.getId());
+            oneRow.add(actor.getNif());
+            oneRow.add(actor.getName());
+            oneRow.add(actor.getAdreca());
+            tableData.add(oneRow);
+        }
+
+        jTable1.setModel(new DefaultTableModel(tableData, tableHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        });
+    }
+
+  /*  public void refreshTableOferta(List list) {
+
+        Vector<String> tableHeaders = new Vector<String>();
+        Vector tableData = new Vector();
+        tableHeaders.add("ID");
+        tableHeaders.add("nomCarrec");
+        tableHeaders.add("sou");
+        tableHeaders.add("disponible");
+        tableHeaders.add("Empresa");
+        tableHeaders.add("Treballador");
+        for (Object o : list) {
+            Oferta actor = (Oferta) o;
+            Vector<Object> oneRow = new Vector<Object>();
+            oneRow.add(actor.getId());
+            oneRow.add(actor.getNomCarrec());
+            oneRow.add(actor.getSou());
+            oneRow.add(actor.isDisponible());
+            oneRow.add(llenar.getDao().getJoinClass("empresa", actor.getId()));
+            oneRow.add(llenar.getDao().getJoinClass("treballador", actor.getId()));
+            tableData.add(oneRow);
+        }
+        jTable1.setModel(new DefaultTableModel(tableData, tableHeaders));
+    }
+
+    public void refreshTableTreballador(List list) {
+
+        Vector<String> tableHeaders = new Vector<String>();
+        Vector tableData = new Vector();
+        tableHeaders.add("ID");
+        tableHeaders.add("name");
+        tableHeaders.add("age");
+        tableHeaders.add("localitation");
+        for (Object o : list) {
+            Treballador actor = (Treballador) o;
+            Vector<Object> oneRow = new Vector<Object>();
+            oneRow.add(actor.getId());
+            oneRow.add(actor.getName());
+            oneRow.add(actor.getAge());
+            oneRow.add(actor.getLocalitation());
+            tableData.add(oneRow);
+        }
+
+        jTable1.setModel(new DefaultTableModel(tableData, tableHeaders) {
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+        });
+    }*/
 
     /**
      * @param args the command line arguments
@@ -63,16 +691,21 @@ public class Menu extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Menu.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -85,5 +718,16 @@ public class Menu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox Dropdownlist2;
+    private javax.swing.JButton Filtrar;
+    private javax.swing.JTextField JTextConsulta;
+    private javax.swing.JComboBox itemSelect;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JButton selectButton;
+    private javax.swing.JButton selectButton1;
+    private javax.swing.JButton selectButton3;
+    private javax.swing.JButton selectButton4;
     // End of variables declaration//GEN-END:variables
 }

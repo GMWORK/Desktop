@@ -134,4 +134,5 @@ public class Cliente implements Serializable {
         this.pedido.add(ped);
         ped.setCliente(this);
     }
+    
 }

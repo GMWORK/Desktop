@@ -14,6 +14,9 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import javafx.scene.shape.Circle;
 import model.Categoria;
@@ -23,6 +26,7 @@ import model.Producto;
 import model.Usuario;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.persister.entity.AbstractEntityPersister;
 import util.HibernateUtil;
 
 /**
@@ -92,7 +96,7 @@ public class PersistencyController {
         return null;
     }
 
-    public Categoria filtrarCategoria(String nombre) {
+    public List<Categoria> filtrarCategoria(String campo,String filtro) {
         return null;
     }
 
@@ -133,7 +137,7 @@ public class PersistencyController {
     public void crearUsuario(String nid, String nombre, String calle, String poblacion, String username, String password) {
     }
 
-    public Usuario filtrarUsuario(String nombre) {
+    public List<Usuario> filtrarUsuario(String campo,String filtro) {
         return null;
     }
 
@@ -153,6 +157,22 @@ public class PersistencyController {
 
     public TreeMap<Usuario, ArrayList<Cliente>> filtrarUsuarioClientes(String nombreUsuario, String nombreCliente) {
         return null;
+    }
+
+    public List<Object> getTableNames() {
+        List<Object> lista = new ArrayList<Object>();
+        Map m = HibernateUtil.getSessionFactory().getAllClassMetadata();
+        Iterator iterator = m.keySet().iterator();
+        while (iterator.hasNext()) {
+            String next = (String) iterator.next();
+            AbstractEntityPersister aep = (AbstractEntityPersister) m.get(next);
+            lista.add(aep.getClassMetadata().getMappedClass());
+        }
+        return lista;
+    }
+
+    public void remove(Object obj) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
