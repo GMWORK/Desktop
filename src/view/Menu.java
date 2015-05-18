@@ -64,6 +64,7 @@ public class Menu extends javax.swing.JFrame {
         Dropdownlist2 = new javax.swing.JComboBox();
         JTextConsulta = new javax.swing.JTextField();
         Filtrar = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -147,6 +148,13 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        jButton1.setLabel("Get");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -161,6 +169,8 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(itemSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(18, 18, 18)
                 .addComponent(selectButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectButton1)
@@ -188,13 +198,14 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(selectButton3)
                     .addComponent(selectButton4)
                     .addComponent(jLabel1)
-                    .addComponent(selectButton))
+                    .addComponent(selectButton)
+                    .addComponent(jButton1))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(JTextConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Dropdownlist2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Filtrar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -214,19 +225,12 @@ public class Menu extends javax.swing.JFrame {
             jframe.setVisible(true);
             jframe.add(jpanel);
 
-            if (dog instanceof Empresa) {
-                Object datos = tabla.get(jTable1.getSelectedRow());
-                String[] labels = new String[]{"id", "nif", "name", "adreca"};
-                rellenarFrameEditar(datos, jpanel, labels);
-            } else if (dog instanceof Oferta) {
-                Object datos = tabla.get(jTable1.getSelectedRow());
-                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
-                rellenarFrameEditar(datos, jpanel, labels);
-            } else if (dog instanceof Treballador) {
-                Object datos = tabla.get(jTable1.getSelectedRow());
-                String[] labels = new String[]{"id", "name", "age", "localitation"};
-                rellenarFrameEditar(datos, jpanel, labels);
-            }
+            if (dog instanceof Usuario) {
+              
+                
+                String[] labels = new String[]{"username", "password"};
+                rellenarFrameEditar(per.mostrarUsuarios().get(jTable1.getSelectedRow()), jpanel, labels);
+            } 
         } else {
             JFrame jframe = new JFrame();
             jframe.setSize(new Dimension(200, 100));
@@ -249,35 +253,57 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_selectButton4ActionPerformed
 
     private void selectButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton3ActionPerformed
-        Object obj = tabla.get(jTable1.getSelectedRow());
-        JFrame jframe = new JFrame();
-        jframe.setSize(new Dimension(200, 100));
-        JPanel jpanel = new JPanel();
-        jpanel.setVisible(true);
-        jpanel.setBounds(50, 50, 50, 50);
-        jframe.setVisible(true);
-        jframe.add(jpanel);
-        JLabel text = new JLabel("Borrar??");
-        jpanel.add(text);
-        JButton aceptar = new JButton("Sí");
-        jpanel.add(aceptar);
-        JButton cancelar = new JButton("No");
-        jpanel.add(cancelar);
-        aceptar.addActionListener(new ActionListener() {
+        
+        if (jTable1.getSelectedRow() > -1) {
+            
+            JFrame jframe = new JFrame();
+            jframe.setSize(new Dimension(200, 100));
+            JPanel jpanel = new JPanel();
+            jpanel.setVisible(true);
+            jpanel.setBounds(50, 50, 50, 50);
+            jframe.setVisible(true);
+            jframe.add(jpanel);
+            JLabel text = new JLabel("Borrar??");
+            jpanel.add(text);
+            JButton aceptar = new JButton("Sí");
+            jpanel.add(aceptar);
+            JButton cancelar = new JButton("No");
+            jpanel.add(cancelar);
+            aceptar.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                per.remove(obj);
-                jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
-            }
-        });
-        cancelar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    per.removeUsuario(jTable1.getSelectedRow());
+                    refreshTableEmpresa(per.mostrarUsuarios()); 
+                    jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+            cancelar.addActionListener(new ActionListener() {
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
-            }
-        });
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+        }else {
+            JFrame jframe = new JFrame();
+            jframe.setSize(new Dimension(200, 100));
+            JPanel jpanel = new JPanel();
+            jpanel.setVisible(true);
+            jpanel.setBounds(50, 50, 50, 50);
+            jframe.setVisible(true);
+            jframe.add(jpanel);
+            JLabel text = new JLabel("Selecciona un registre");
+            jpanel.add(text);
+            JButton boto = new JButton("aceptar");
+            jpanel.add(boto);
+            boto.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
+                }
+            });
+        }
     }//GEN-LAST:event_selectButton3ActionPerformed
 
     private void selectButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton1ActionPerformed
@@ -299,16 +325,10 @@ public class Menu extends javax.swing.JFrame {
             jframe.setVisible(true);
             jframe.add(jpanel);
 
-            if (dog instanceof Empresa) {
-                String[] labels = new String[]{"id", "nif", "name", "adreca"};
+            if (dog instanceof Usuario) {
+                String[] labels = new String[]{"UserName", "Password"};
                 rellenarFrame(dog, jpanel, labels);
-            } else if (dog instanceof Oferta) {
-                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
-                rellenarFrame(dog, jpanel, labels);
-            } else if (dog instanceof Treballador) {
-                String[] labels = new String[]{"id", "name", "age", "localitation"};
-                rellenarFrame(dog, jpanel, labels);
-            }
+            } 
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -329,42 +349,20 @@ public class Menu extends javax.swing.JFrame {
             System.out.println(a);
             String b[] = a.split("\\.");
             System.out.println(b.length);
-            Class<?> c = Class.forName("hibernate.relaciones." + b[b.length - 1]);
-            System.out.println(c);
+            Class<?> c = Class.forName("model." + b[b.length - 1]);
+            
+            System.out.println(per.mostrarUsuarios());
             dog = c.newInstance();
 
-            if (dog instanceof Empresa) {
-
-                tabla = llenar.getDao().getEntityList(dog.getClass());
-                refreshTableEmpresa(tabla);
-                String[] labels = new String[]{"id", "nif", "name", "adreca"};
-
-                Dropdownlist2.removeAllItems();
-                for (String dato : labels) {
-                    Dropdownlist2.addItem(dato);
-                }
-
-            } else if (dog instanceof Oferta) {
-
-                tabla = llenar.getDao().getEntityList(dog.getClass());
-                refreshTableOferta(tabla);
-                String[] labels = new String[]{"id", "nomCarrec", "sou", "disponible"};
-                Dropdownlist2.removeAllItems();
-                for (String dato : labels) {
-                    Dropdownlist2.addItem(dato);
-                }
-            } else if (dog instanceof Treballador) {
-
-                tabla = llenar.getDao().getEntityList(dog.getClass());
-                refreshTableTreballador(tabla);
-                String[] labels = new String[]{"id", "name", "age", "localitation"};
+            if (dog instanceof Usuario) {
+                refreshTableEmpresa(per.mostrarUsuarios()); 
+                String[] labels = new String[]{"nif", "nombre", "apellidos", "calle","poblacion","administrador","username","password"};
                 Dropdownlist2.removeAllItems();
                 for (String dato : labels) {
                     Dropdownlist2.addItem(dato);
                 }
             }
-            System.out.println(dog);
-
+            System.out.println(dog.toString());
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -376,6 +374,10 @@ public class Menu extends javax.swing.JFrame {
 
     private void itemSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSelectActionPerformed
         // TODO add your handling code here:
+        if (dog instanceof Usuario) {
+            tabla = per.mostrarUsuarios();/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+            refreshTableEmpresa(tabla);
+        } 
     }//GEN-LAST:event_itemSelectActionPerformed
 
     public static void success() {
@@ -383,27 +385,28 @@ public class Menu extends javax.swing.JFrame {
     }
 
     private void FiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltrarActionPerformed
-        if (dog instanceof Categoria) {
-            tabla = per.filtrarCategoria(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+        if (dog instanceof Usuario) {
+            tabla = per.filtrarUsuario(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
             refreshTableEmpresa(tabla);
-        } else if (dog instanceof Usuario) {
-            tabla = per.filtrarUsuario(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());
-            refreshTableOferta(tabla);
-        } else if (dog instanceof Treballador) {
-            tabla = llenar.getDao().filtrar(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText(), dog.getClass());
-            refreshTableTreballador(tabla);
-        }
+        } 
     }//GEN-LAST:event_FiltrarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        Background AplicarFondo = new Background();
+        Background AplicarFondo = new Background(this.getSize(),"");
         this.add(AplicarFondo, BorderLayout.SOUTH);
         AplicarFondo.repaint();
     }//GEN-LAST:event_formWindowOpened
+    
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        //Categoria, producto, usuario, cliente, pedido, pedidoProducto
+        
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
     public void rellenarFrame(Object dog, JPanel panel, String[] labels) {
         JLabel jlab = null;
         JTextField jtex = new JTextField(20);
-        for (int i = 1; i < labels.length; i++) {
+        for (int i = 0; i < labels.length; i++) {
             jlab = new JLabel(labels[i]);
             jtex = new JTextField(20);
             panel.add(jlab);
@@ -415,7 +418,6 @@ public class Menu extends javax.swing.JFrame {
         jbutt.setLocation(panel.getWidth() / 2, 40);
         panel.add(jbutt);
         jbutt.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(ActionEvent e) {
                 Boolean error = false;
@@ -431,26 +433,14 @@ public class Menu extends javax.swing.JFrame {
                     }
                 }
                 if (!error) {
-                    if (dog instanceof Empresa) {
-                        Empresa emp = new Empresa();
-                        emp.setNif((String) list.get(0));
-                        emp.setName((String) list.get(1));
-                        emp.setAdreca((String) list.get(2));
-                        llenar.getDao().insert(emp);
-                        success();
-                    } else if (dog instanceof Oferta) {
-                        Oferta emp = new Oferta();
-                        emp.setNomCarrec((String) list.get(0));
-                        emp.setSou(Integer.parseInt((String) list.get(1)));
-                        emp.setDisponible(Boolean.parseBoolean((String) list.get(2)));
-                        llenar.getDao().insert(emp);
-                        success();
-                    } else if (dog instanceof Treballador) {
-                        Treballador emp = new Treballador();
-                        emp.setName((String) list.get(0));
-                        emp.setAge(Integer.parseInt((String) list.get(1)));
-                        emp.setLocalitation((String) list.get(2));
-                        llenar.getDao().insert(emp);
+                    if (dog instanceof Usuario) {
+//                        Usuario emp = new Usuario();
+//                        emp.setUsername((String)list.get(0));
+//                        emp.setPassword((String) list.get(1));
+//                        emp.setNombre((String) list.get(2));
+//                        emp.setCalle((String) list.get(3));                       
+                        per.crearUsuario(((String)list.get(0)),(String) list.get(1));
+                        refreshTableEmpresa(per.mostrarUsuarios()); 
                         success();
                     }
                 } else {
@@ -482,39 +472,21 @@ public class Menu extends javax.swing.JFrame {
         List valores = new ArrayList();
         JComboBox jcom = new JComboBox();
         JComboBox jcom2 = new JComboBox();
-        if (dog instanceof Empresa) {
-            Empresa emp = (Empresa) dog;
-            valores.add(emp.getId());
-            valores.add(emp.getNif());
-            valores.add(emp.getName());
-            valores.add(emp.getAdreca());
-        } else if (dog instanceof Oferta) {
-            Oferta emp = (Oferta) dog;
-            valores.add(emp.getId());
-            valores.add(emp.getNomCarrec());
-            valores.add(String.valueOf(emp.getSou()));
-            valores.add(String.valueOf(emp.isDisponible()));
-            valores.add(emp.getEmpresa());
-            valores.add(emp.getTreballador());
-            valores.add(llenar.getDao().getEntityList(Treballador.class));
-        } else if (dog instanceof Treballador) {
-            Treballador emp = (Treballador) dog;
-            valores.add(emp.getId());
-            valores.add(emp.getName());
-            valores.add(String.valueOf(emp.getAge()));
-            valores.add(emp.getLocalitation());
-
-        }
-        jlab = new JLabel("ID");
-        jtex = new JTextField(20);
-
-        jtex.setEditable(false);
-        panel.add(jlab);
-        panel.add(jtex);
-        jtex.setText(String.valueOf(valores.get(0)));
-        jlab.setLocation(12, 10);
-        jtex.setLocation(26, 10);
-        for (int i = 1; i < labels.length; i++) {
+        if (dog instanceof Usuario) {
+            Usuario emp = (Usuario) dog;
+            valores.add(emp.getUsername());
+            valores.add(emp.getPassword());
+        } 
+        //jlab = new JLabel();
+       // jtex = new JTextField(20);
+        
+        //jtex.setEditable(false);
+    //    panel.add(jlab);
+      // panel.add(jtex);
+       // jtex.setText(String.valueOf(valores.get(0)));
+       // jlab.setLocation(12, 10);
+     //   jtex.setLocation(26, 10);
+        for (int i = 0; i < labels.length; i++) {
             jlab = new JLabel(labels[i]);
             jtex = new JTextField(20);
             panel.add(jlab);
@@ -523,22 +495,13 @@ public class Menu extends javax.swing.JFrame {
             jlab.setLocation(12, ((i) * 10));
             jtex.setLocation(26, ((i) * 10));
         }
-        if (dog instanceof Oferta) {
+        /*if (dog instanceof Usuario) {
             jlab = new JLabel("Empresa");
             jcom = new JComboBox();
-            for (Empresa valor : llenar.getDao().getEntityList(Empresa.class)) {
+            for (Usuario valor : per.mostrarUsuarios()) {
                 jcom.addItem(valor);
             }
-            panel.add(jlab);
-            jlab = new JLabel("Treballador");
-            jcom2 = new JComboBox();
-            for (Treballador valor : llenar.getDao().getEntityList(Treballador.class)) {
-                jcom2.addItem(valor);
-            }
-            panel.add(jcom);
-            panel.add(jlab);
-            panel.add(jcom2);
-        }
+        }*/
         JButton jbutt = new JButton("envia");
         jbutt.setLocation(panel.getWidth() / 2, 40);
         panel.add(jbutt);
@@ -560,27 +523,21 @@ public class Menu extends javax.swing.JFrame {
                     if (panel.getComponent(i) instanceof JComboBox) {
                         JComboBox m = (JComboBox) panel.getComponent(i);
                         Object obj = m.getSelectedItem();
-                        if (obj instanceof Empresa) {
-                            Empresa em = (Empresa) obj;
-                            list.add(em.getName());
-                        }
-                        if (obj instanceof Treballador) {
-                            Treballador t = (Treballador) obj;
-                            list.add(t.getName());
+                        if (obj instanceof Usuario) {
+                            Usuario em = (Usuario) obj;
+                            list.add(em.getNombre());
                         }
                     }
                 }
                 if (!error) {
-                    if (dog instanceof Empresa) {
-                        llenar.getDao().updateEmpresa(Long.parseLong((String) list.get(0)), (String) list.get(1), (String) list.get(2), (String) list.get(3));
+                    if (dog instanceof Usuario) {
+                        Usuario usu = (Usuario) dog;
+                        usu.setUsername((String) list.get(0));
+                        usu.setPassword((String) list.get(1));
+                        per.editarUsuario(usu);
+                        refreshTableEmpresa(per.mostrarUsuarios());
                         success();
-                    } else if (dog instanceof Oferta) {
-                        llenar.getDao().updateOferta(Long.parseLong((String) list.get(0)), (String) list.get(1), Integer.parseInt((String) list.get(2)), Boolean.parseBoolean((String) list.get(3)), (String) list.get(4), (String) list.get(5));
-                        success();
-                    } else if (dog instanceof Treballador) {
-                        llenar.getDao().updateTreballador(Long.parseLong((String) list.get(0)), (String) list.get(1), Integer.parseInt((String) list.get(2)), (String) list.get(3));
-                        success();
-                    }
+                    } 
                 } else {
                     JFrame jframe = new JFrame();
                     JPanel jpanel = new JPanel();
@@ -608,14 +565,14 @@ public class Menu extends javax.swing.JFrame {
 
         Vector<String> tableHeaders = new Vector<String>();
         Vector tableData = new Vector();
-        
+        tableHeaders.add("Username");
+        tableHeaders.add("Password");
         for (Object o : list) {
-            Empresa actor = (Empresa) o;
+            Usuario actor = (Usuario) o;
             Vector<Object> oneRow = new Vector<Object>();
-            oneRow.add(actor.getId());
-            oneRow.add(actor.getNif());
-            oneRow.add(actor.getName());
-            oneRow.add(actor.getAdreca());
+            oneRow.add(actor.getUsername());
+            oneRow.add(actor.getPassword());
+            //oneRow.add(actor.getCalle());
             tableData.add(oneRow);
         }
 
@@ -722,6 +679,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton Filtrar;
     private javax.swing.JTextField JTextConsulta;
     private javax.swing.JComboBox itemSelect;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;

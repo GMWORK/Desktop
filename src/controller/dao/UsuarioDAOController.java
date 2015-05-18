@@ -82,6 +82,8 @@ public class UsuarioDAOController extends AbstractDAO {
         Session sesion = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = sesion.beginTransaction();
         Serializable emplId = sesion.save(cat);//Estat Persistent
+        tx.commit();
+        sesion.flush();
         finishOperation();
     }
 
@@ -98,7 +100,7 @@ public class UsuarioDAOController extends AbstractDAO {
         return listaContactos;
     }
 
-    public Object filtrarUsuario(Usuario cat) {
+    public List<Usuario> filtrarUsuario(String campo, String filtro) {
         Object usuario = null;
         /*
          Prueba local introducir para probar que funcione
@@ -106,18 +108,17 @@ public class UsuarioDAOController extends AbstractDAO {
 
         try {
             startOperation();
-            usuario = sesion.createQuery("from Usuario u where u.username like ? and u.password like ?")
-                    .setParameter(0, cat.getUsername())
-                    .setParameter(1, cat.getPassword())
+            usuario = sesion.createQuery("from Usuario u where u."+filtro+"   like '"+campo+"' ")
                     .list();
 //usuario = sesion.createQuery("from Usuario u where u.username like '"+cat.getUsername()+ "' and u.password like '"+ cat.getPassword()+"' ").list();
         } finally {
             finishOperation();
         }
 
-        return usuario;
+        return (List<Usuario>) usuario;
     }
 
     public void EditarUsuario(Usuario cat) {
+        
     }
 }

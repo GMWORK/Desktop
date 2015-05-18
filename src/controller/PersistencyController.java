@@ -64,18 +64,21 @@ public class PersistencyController {
 
         usu.setUsername(username);
         usu.setPassword(password);
-        usuDAO.addUsuario(usu);
-        if (usuDAO.filtrarUsuario(usu) != null) {
+        usuDAO.insert(usu);
+     /*   if (usuDAO.filtrarUsuario(usu) != null) {
             return true;
         } else {
             return false;
-        }
+        }*/
+        return true;
     }
 
     public void guardarDatosBajados() {
     }
 
     public void removeProducto(String nombre) {
+       
+        
     }
 
     public void editarProducto(String nombre, double precio, byte[] img, boolean inhabilitats, double descuento, Categoria categoria) {
@@ -122,7 +125,12 @@ public class PersistencyController {
     public void crearCliente(String nif, int edad, String nombre, String apellidos, double latitud, double longitud, Date proximaVisita) {
     }
 
-    public void removeUsuario(String nombre) {
+    public void removeUsuario(int selected) {
+         usuDAO.delete(usuDAO.getUsuarios().get(selected));
+    }
+    
+    public void editarUsuario(Usuario usu) {
+         usuDAO.update(usu);
     }
 
     public void crearCategoria(String nombre, double descuento) {
@@ -135,14 +143,16 @@ public class PersistencyController {
     }
 
     public void crearUsuario(String nid, String nombre, String calle, String poblacion, String username, String password) {
+        
     }
 
     public List<Usuario> filtrarUsuario(String campo,String filtro) {
-        return null;
+        
+         return usuDAO.filtrarUsuario(filtro,campo);
     }
 
-    public ArrayList<Usuario> mostrarUsuarios() {
-        return null;
+    public List<Usuario> mostrarUsuarios() {
+        return usuDAO.getUsuarios();
     }
 
     public void crearPedido(Date fecha, Cliente cliente, ArrayList<Producto> productos) {
@@ -172,7 +182,14 @@ public class PersistencyController {
     }
 
     public void remove(Object obj) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+    }
+
+    public void crearUsuario(String userName, String pass) {
+        Usuario u = new Usuario();
+        u.setUsername(userName);
+        u.setPassword(pass);
+        usuDAO.insert(u);
     }
 
 }

@@ -113,6 +113,7 @@ public class Login extends JFrame {
             // TODO add your handling code here:
             this.setVisible(false);
             Menu menu = new Menu(per);
+            menu.setVisible(true);
         } else {
             PopupError pop = new PopupError("Error Autenticacion Erronea");
         }
