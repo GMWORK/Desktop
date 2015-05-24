@@ -1,9 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
+
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,25 +12,38 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
- * @author mateo
+ * Created by mateo on 30/04/15.
  */
-public class Pedido implements Serializable {
-
+@DatabaseTable(tableName = "pedido")
+public class Pedido  implements Serializable {
+    @DatabaseField(generatedId = true)
     private long id;
-    private Date fecha;
+    @DatabaseField
+    private String fechaEntrega;
+    @DatabaseField
     private String estado;
+    @DatabaseField
+    private double total;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Cliente cliente;
-    private List liniaProducto = new ArrayList<PedidoProducto>();
+    private boolean baja;
+    @ForeignCollectionField
+    private ForeignCollection<PedidoProducto> liniaProducto;
     
     public Pedido() {
     }
     
-    public Pedido(Date fecha, String estado) {
-        this.fecha = fecha;
+    public Pedido(String fechaEntrega, String estado) {
+        this.fechaEntrega = fechaEntrega;
         this.estado = estado;
     }
-    
+
+    public Pedido(String fecha, String estado, double total) {
+        this.fechaEntrega = fechaEntrega;
+        this.estado = estado;
+        this.total = total;
+    }
+
     public long getId() {
         return id;
     }
@@ -37,15 +51,15 @@ public class Pedido implements Serializable {
     public void setId(long id) {
         this.id = id;
     }
-    
-    public Date getFecha() {
-        return fecha;
+
+    public String getFechaEntrega() {
+        return fechaEntrega;
     }
-    
-    public void setFecha(Date fecha) {
-        this.fecha = fecha;
+
+    public void setFechaEntrega(String fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
-    
+
     public String getEstado() {
         return estado;
     }
@@ -57,23 +71,52 @@ public class Pedido implements Serializable {
     public Cliente getCliente() {
         return cliente;
     }
-    
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
-    
-    public List getLiniaProducto() {
+
+    public ForeignCollection<PedidoProducto> getLiniaProducto() {
         return liniaProducto;
     }
-    
-    public void setLiniaProducto(List liniaProducto) {
+
+    public void setLiniaProducto(ForeignCollection<PedidoProducto> liniaProducto) {
         this.liniaProducto = liniaProducto;
     }
 
     public void addLiniaProducto(PedidoProducto pPro) {
+
         this.liniaProducto.add(pPro);
         pPro.setPedido(this);
+
         
     }
-    
+
+    public boolean isBaja() {
+        return baja;
+    }
+
+    public void setBaja(boolean baja) {
+        this.baja = baja;
+    }
+
+    @Override
+    public String toString() {
+        return "Pedido[" +
+                "id=" + id +
+                ", fecha='" + fechaEntrega + '\'' +
+                ", estado='" + estado + '\'' +
+                ", total=" + total +
+                ", cliente=" + cliente +
+                ", liniaProducto=" + liniaProducto +
+                ']';
+    }
 }

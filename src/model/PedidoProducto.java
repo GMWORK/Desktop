@@ -1,21 +1,25 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 
 import java.io.Serializable;
 
 /**
- *
- * @author mateo
+ * Created by mateo on 30/04/15.
  */
+@DatabaseTable(tableName = "pedidoProducto")
 public class PedidoProducto implements Serializable {
+    @DatabaseField(generatedId = true)
     private long id;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Producto producto;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Pedido pedido;
+    @DatabaseField
     private double cantidad;
+    @DatabaseField
+    private boolean baja;
 
     public PedidoProducto() {
     }
@@ -57,5 +61,22 @@ public class PedidoProducto implements Serializable {
     public void setCantidad(double cantidad) {
         this.cantidad = cantidad;
     }
-    
+
+    public boolean isBaja() {
+        return baja;
+    }
+
+    public void setBaja(boolean baja) {
+        this.baja = baja;
+    }
+
+    @Override
+    public String toString() {
+        return "PedidoProducto[" +
+                "id=" + id +
+                ", producto=" + producto +
+                ", pedido=" + pedido +
+                ", cantidad=" + cantidad +
+                ']';
+    }
 }

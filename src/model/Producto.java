@@ -1,29 +1,40 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package model;
 
-import java.awt.Image;
+import com.j256.ormlite.dao.ForeignCollection;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
+import com.j256.ormlite.table.DatabaseTable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
- *
- * @author mateo
+ * Created by Matthew on 05/05/2015.
  */
+@DatabaseTable(tableName = "producto")
 public class Producto implements Serializable {
 
+    @DatabaseField(generatedId = true)
     private long id;
+    @DatabaseField
     private String nombre;
+    @DatabaseField
     private double precio;
+    @DatabaseField(dataType = DataType.BYTE_ARRAY)
     private byte[] img;
+    @DatabaseField
     private boolean inhabilitats;
+    @DatabaseField
     private double descuento;
+    @DatabaseField
+    private boolean baja;
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private Categoria categoria;
-    private List liniaPedido = new ArrayList<PedidoProducto>();
+    @ForeignCollectionField
+    private ForeignCollection<PedidoProducto> liniaPedidos;
 
     public Producto() {
     }
@@ -34,6 +45,15 @@ public class Producto implements Serializable {
         this.img = img;
         this.inhabilitats = inhabilitats;
         this.descuento = descuento;
+    }
+
+    public Producto(String nombre, double precio, byte[] img, boolean inhabilitats, double descuento, Categoria categoria) {
+        this.categoria = categoria;
+        this.descuento = descuento;
+        this.inhabilitats = inhabilitats;
+        this.img = img;
+        this.precio = precio;
+        this.nombre = nombre;
     }
 
     public long getId() {
@@ -92,17 +112,31 @@ public class Producto implements Serializable {
         this.categoria = categoria;
     }
 
-    public List getLiniaPedido() {
-        return liniaPedido;
+    public ForeignCollection<PedidoProducto> getLiniaPedidos() {
+        return liniaPedidos;
     }
 
-    public void setLiniaPedido(List liniaPedido) {
-        this.liniaPedido = liniaPedido;
+    public void setLiniaPedidos(ForeignCollection<PedidoProducto> liniaPedidos) {
+        this.liniaPedidos = liniaPedidos;
     }
 
     public void addLiniaPedido(PedidoProducto liPro) {
-        this.liniaPedido.add(liPro);
         liPro.setProducto(this);
+        this.liniaPedidos.add(liPro);
+
     }
 
+    @Override
+    public String toString() {
+        return "Producto["
+                + "id=" + id
+                + ", nombre='" + nombre + '\''
+                + ", precio=" + precio
+                + ", img=" + Arrays.toString(img)
+                + ", inhabilitats=" + inhabilitats
+                + ", descuento=" + descuento
+                + ", categoria=" + categoria
+                + ", liniaPedidos=" + liniaPedidos
+                + ']';
+    }
 }

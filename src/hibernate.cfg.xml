@@ -10,7 +10,7 @@
         <property name="dialect">com.gmwork.dialect.SQLiteDialect</property>
         <!-- Otras propiedades importantes -->
         <property name="show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">create-drop</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
         <!--    Mapeos  -->
         <mapping resource="model/mapping/Categoria.hbm.xml"/>
         <mapping resource="model/mapping/Cliente.hbm.xml"/>

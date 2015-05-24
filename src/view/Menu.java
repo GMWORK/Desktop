@@ -11,6 +11,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -23,13 +24,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import model.Categoria;
 import model.Usuario;
 
 public class Menu extends javax.swing.JFrame {
 
     private Object dog;
-    private  static PersistencyController per;
+    private static PersistencyController per;
     private List tabla;
 
     public Menu(PersistencyController per) {
@@ -148,7 +148,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setLabel("Get");
+        jButton1.setText("Cerrar Sesion");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -169,8 +169,6 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(itemSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
                 .addComponent(selectButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectButton1)
@@ -187,19 +185,22 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(Filtrar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jButton1)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(32, 32, 32)
+                .addComponent(jButton1)
+                .addGap(9, 9, 9)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(itemSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(selectButton1)
                     .addComponent(selectButton3)
                     .addComponent(selectButton4)
                     .addComponent(jLabel1)
-                    .addComponent(selectButton)
-                    .addComponent(jButton1))
+                    .addComponent(selectButton))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(JTextConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -214,7 +215,7 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void selectButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton4ActionPerformed
-        
+
         if (jTable1.getSelectedRow() > -1) {
             JFrame jframe = new JFrame();
             JPanel jpanel = new JPanel();
@@ -226,11 +227,14 @@ public class Menu extends javax.swing.JFrame {
             jframe.add(jpanel);
 
             if (dog instanceof Usuario) {
-              
-                
+
                 String[] labels = new String[]{"username", "password"};
-                rellenarFrameEditar(per.mostrarUsuarios().get(jTable1.getSelectedRow()), jpanel, labels);
-            } 
+                try {
+                    rellenarFrameEditar(per.mostrarUsuarios().get(jTable1.getSelectedRow()), jpanel, labels);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         } else {
             JFrame jframe = new JFrame();
             jframe.setSize(new Dimension(200, 100));
@@ -253,9 +257,9 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_selectButton4ActionPerformed
 
     private void selectButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectButton3ActionPerformed
-        
+
         if (jTable1.getSelectedRow() > -1) {
-            
+
             JFrame jframe = new JFrame();
             jframe.setSize(new Dimension(200, 100));
             JPanel jpanel = new JPanel();
@@ -274,7 +278,11 @@ public class Menu extends javax.swing.JFrame {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     per.removeUsuario(jTable1.getSelectedRow());
-                    refreshTableEmpresa(per.mostrarUsuarios()); 
+                    try {
+                        refreshTableEmpresa(per.mostrarUsuarios());
+                    } catch (SQLException ex) {
+                        Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
                 }
             });
@@ -285,7 +293,7 @@ public class Menu extends javax.swing.JFrame {
                     jframe.dispatchEvent(new WindowEvent(jframe, WindowEvent.WINDOW_CLOSING));
                 }
             });
-        }else {
+        } else {
             JFrame jframe = new JFrame();
             jframe.setSize(new Dimension(200, 100));
             JPanel jpanel = new JPanel();
@@ -310,10 +318,9 @@ public class Menu extends javax.swing.JFrame {
 
         try {
             Object selected = itemSelect.getSelectedItem();
-            String a = selected.toString();
-            String b[] = a.split("\\.");
+
             Class<?> c;
-            c = Class.forName("model." + b[b.length - 1]);
+            c = Class.forName("model." + selected.toString());
             System.out.println(c);
             dog = c.newInstance();
 
@@ -328,7 +335,7 @@ public class Menu extends javax.swing.JFrame {
             if (dog instanceof Usuario) {
                 String[] labels = new String[]{"UserName", "Password"};
                 rellenarFrame(dog, jpanel, labels);
-            } 
+            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
@@ -349,14 +356,14 @@ public class Menu extends javax.swing.JFrame {
             System.out.println(a);
             String b[] = a.split("\\.");
             System.out.println(b.length);
-            Class<?> c = Class.forName("model." + b[b.length - 1]);
-            
-            System.out.println(per.mostrarUsuarios());
+            Class<?> c = Class.forName("model." + itemSelect.getSelectedItem());
+
+           
             dog = c.newInstance();
 
             if (dog instanceof Usuario) {
-                refreshTableEmpresa(per.mostrarUsuarios()); 
-                String[] labels = new String[]{"nif", "nombre", "apellidos", "calle","poblacion","administrador","username","password"};
+                refreshTableEmpresa(per.mostrarUsuarios());
+                String[] labels = new String[]{"nif", "nombre", "apellidos", "calle", "poblacion", "administrador", "username", "password","baja"};
                 Dropdownlist2.removeAllItems();
                 for (String dato : labels) {
                     Dropdownlist2.addItem(dato);
@@ -369,39 +376,47 @@ public class Menu extends javax.swing.JFrame {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_selectButtonActionPerformed
 
     private void itemSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSelectActionPerformed
         // TODO add your handling code here:
         if (dog instanceof Usuario) {
-            tabla = per.mostrarUsuarios();/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+            try {
+                tabla = per.mostrarUsuarios();/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+            }
             refreshTableEmpresa(tabla);
-        } 
+        }
     }//GEN-LAST:event_itemSelectActionPerformed
 
     public static void success() {
-        Message message = new Message("Correcte","Insercio Correcte","Aceptar");
+        Message message = new Message("Correcte", "Insercio Correcte", "Aceptar");
     }
 
     private void FiltrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltrarActionPerformed
         if (dog instanceof Usuario) {
             tabla = per.filtrarUsuario(Dropdownlist2.getSelectedItem().toString(), JTextConsulta.getText());/*.filtrar(, JTextConsulta.getText(), dog.getClass());*/
+
             refreshTableEmpresa(tabla);
-        } 
+        }
     }//GEN-LAST:event_FiltrarActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        Background AplicarFondo = new Background(this.getSize(),"");
+        Background AplicarFondo = new Background(this.getSize(), "");
         this.add(AplicarFondo, BorderLayout.SOUTH);
         AplicarFondo.repaint();
     }//GEN-LAST:event_formWindowOpened
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         //Categoria, producto, usuario, cliente, pedido, pedidoProducto
-        
-        
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
     public void rellenarFrame(Object dog, JPanel panel, String[] labels) {
         JLabel jlab = null;
@@ -439,8 +454,12 @@ public class Menu extends javax.swing.JFrame {
 //                        emp.setPassword((String) list.get(1));
 //                        emp.setNombre((String) list.get(2));
 //                        emp.setCalle((String) list.get(3));                       
-                        per.crearUsuario(((String)list.get(0)),(String) list.get(1));
-                        refreshTableEmpresa(per.mostrarUsuarios()); 
+                        per.crearUsuario(((String) list.get(0)), (String) list.get(1));
+                        try {
+                            refreshTableEmpresa(per.mostrarUsuarios());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         success();
                     }
                 } else {
@@ -476,16 +495,16 @@ public class Menu extends javax.swing.JFrame {
             Usuario emp = (Usuario) dog;
             valores.add(emp.getUsername());
             valores.add(emp.getPassword());
-        } 
+        }
         //jlab = new JLabel();
-       // jtex = new JTextField(20);
-        
+        // jtex = new JTextField(20);
+
         //jtex.setEditable(false);
-    //    panel.add(jlab);
-      // panel.add(jtex);
-       // jtex.setText(String.valueOf(valores.get(0)));
-       // jlab.setLocation(12, 10);
-     //   jtex.setLocation(26, 10);
+        //    panel.add(jlab);
+        // panel.add(jtex);
+        // jtex.setText(String.valueOf(valores.get(0)));
+        // jlab.setLocation(12, 10);
+        //   jtex.setLocation(26, 10);
         for (int i = 0; i < labels.length; i++) {
             jlab = new JLabel(labels[i]);
             jtex = new JTextField(20);
@@ -496,12 +515,12 @@ public class Menu extends javax.swing.JFrame {
             jtex.setLocation(26, ((i) * 10));
         }
         /*if (dog instanceof Usuario) {
-            jlab = new JLabel("Empresa");
-            jcom = new JComboBox();
-            for (Usuario valor : per.mostrarUsuarios()) {
-                jcom.addItem(valor);
-            }
-        }*/
+         jlab = new JLabel("Empresa");
+         jcom = new JComboBox();
+         for (Usuario valor : per.mostrarUsuarios()) {
+         jcom.addItem(valor);
+         }
+         }*/
         JButton jbutt = new JButton("envia");
         jbutt.setLocation(panel.getWidth() / 2, 40);
         panel.add(jbutt);
@@ -535,9 +554,13 @@ public class Menu extends javax.swing.JFrame {
                         usu.setUsername((String) list.get(0));
                         usu.setPassword((String) list.get(1));
                         per.editarUsuario(usu);
-                        refreshTableEmpresa(per.mostrarUsuarios());
+                        try {
+                            refreshTableEmpresa(per.mostrarUsuarios());
+                        } catch (SQLException ex) {
+                            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         success();
-                    } 
+                    }
                 } else {
                     JFrame jframe = new JFrame();
                     JPanel jpanel = new JPanel();
@@ -584,56 +607,55 @@ public class Menu extends javax.swing.JFrame {
         });
     }
 
-  /*  public void refreshTableOferta(List list) {
+    /*  public void refreshTableOferta(List list) {
 
-        Vector<String> tableHeaders = new Vector<String>();
-        Vector tableData = new Vector();
-        tableHeaders.add("ID");
-        tableHeaders.add("nomCarrec");
-        tableHeaders.add("sou");
-        tableHeaders.add("disponible");
-        tableHeaders.add("Empresa");
-        tableHeaders.add("Treballador");
-        for (Object o : list) {
-            Oferta actor = (Oferta) o;
-            Vector<Object> oneRow = new Vector<Object>();
-            oneRow.add(actor.getId());
-            oneRow.add(actor.getNomCarrec());
-            oneRow.add(actor.getSou());
-            oneRow.add(actor.isDisponible());
-            oneRow.add(llenar.getDao().getJoinClass("empresa", actor.getId()));
-            oneRow.add(llenar.getDao().getJoinClass("treballador", actor.getId()));
-            tableData.add(oneRow);
-        }
-        jTable1.setModel(new DefaultTableModel(tableData, tableHeaders));
-    }
+     Vector<String> tableHeaders = new Vector<String>();
+     Vector tableData = new Vector();
+     tableHeaders.add("ID");
+     tableHeaders.add("nomCarrec");
+     tableHeaders.add("sou");
+     tableHeaders.add("disponible");
+     tableHeaders.add("Empresa");
+     tableHeaders.add("Treballador");
+     for (Object o : list) {
+     Oferta actor = (Oferta) o;
+     Vector<Object> oneRow = new Vector<Object>();
+     oneRow.add(actor.getId());
+     oneRow.add(actor.getNomCarrec());
+     oneRow.add(actor.getSou());
+     oneRow.add(actor.isDisponible());
+     oneRow.add(llenar.getDao().getJoinClass("empresa", actor.getId()));
+     oneRow.add(llenar.getDao().getJoinClass("treballador", actor.getId()));
+     tableData.add(oneRow);
+     }
+     jTable1.setModel(new DefaultTableModel(tableData, tableHeaders));
+     }
 
-    public void refreshTableTreballador(List list) {
+     public void refreshTableTreballador(List list) {
 
-        Vector<String> tableHeaders = new Vector<String>();
-        Vector tableData = new Vector();
-        tableHeaders.add("ID");
-        tableHeaders.add("name");
-        tableHeaders.add("age");
-        tableHeaders.add("localitation");
-        for (Object o : list) {
-            Treballador actor = (Treballador) o;
-            Vector<Object> oneRow = new Vector<Object>();
-            oneRow.add(actor.getId());
-            oneRow.add(actor.getName());
-            oneRow.add(actor.getAge());
-            oneRow.add(actor.getLocalitation());
-            tableData.add(oneRow);
-        }
+     Vector<String> tableHeaders = new Vector<String>();
+     Vector tableData = new Vector();
+     tableHeaders.add("ID");
+     tableHeaders.add("name");
+     tableHeaders.add("age");
+     tableHeaders.add("localitation");
+     for (Object o : list) {
+     Treballador actor = (Treballador) o;
+     Vector<Object> oneRow = new Vector<Object>();
+     oneRow.add(actor.getId());
+     oneRow.add(actor.getName());
+     oneRow.add(actor.getAge());
+     oneRow.add(actor.getLocalitation());
+     tableData.add(oneRow);
+     }
 
-        jTable1.setModel(new DefaultTableModel(tableData, tableHeaders) {
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
-        });
-    }*/
-
+     jTable1.setModel(new DefaultTableModel(tableData, tableHeaders) {
+     @Override
+     public boolean isCellEditable(int row, int col) {
+     return false;
+     }
+     });
+     }*/
     /**
      * @param args the command line arguments
      */
