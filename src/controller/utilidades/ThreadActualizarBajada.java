@@ -35,13 +35,14 @@ public class ThreadActualizarBajada implements Runnable {
     public TreeMap<String, ArrayList> doOperation() {
 
         TreeMap<String, ArrayList> map = new TreeMap<String, ArrayList>();
-        map.put("Categoria", parseJsonVistas.parseCategoriaLog(Content[0]));
-        map.put("Productos", parseJsonVistas.parseProductoVista(Content[1]));
-        map.put("Usuario", parseJsonVistas.parseUsuarioLog(Content[2]));
-        map.put("Cliente", parseJsonVistas.parseClienteLog(Content[3]));
-        map.put("Pedido", parseJsonVistas.parsePedido(Content[4]));
-        map.put("PedidoProducto", parseJsonVistas.parsePedidoproductoLog(Content[5]));
         try {
+            map.put("Categoria", parseJsonVistas.parseCategoriaLog(Content[0]));
+            map.put("Productos", parseJsonVistas.parseProductoVista(Content[1]));
+            map.put("Usuario", parseJsonVistas.parseUsuarioLog(Content[2]));
+            map.put("Cliente", parseJsonVistas.parseClienteLog(Content[3]));
+            map.put("Pedido", parseJsonVistas.parsePedido(Content[4]));
+            map.put("PedidoProducto", parseJsonVistas.parsePedidoproductoLog(Content[5]));
+
             map.put("HoraBajada", parseJson.montarHoraBajada(Content[6]));
         } catch (JSONException ex) {
             Logger.getLogger(ThreadActualizarBajada.class.getName()).log(Level.SEVERE, null, ex);

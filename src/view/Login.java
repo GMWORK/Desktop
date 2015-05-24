@@ -123,6 +123,7 @@ public class Login extends JFrame {
         if (per.hacerLogin(jTextFieldUsername.getText(), jTextPassword.getPassword().toString())) {
             // TODO add your handling code here:
             this.setVisible(false);
+            per.empezarActualizacion();
             Menu menu = new Menu(per);
             menu.setVisible(true);
         } else {

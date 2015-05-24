@@ -34,6 +34,10 @@ public class ProductoDAOController extends AbstractDAO {
 
     }
 
+    public List<ProductoLog> getLog() throws SQLException {
+        return daoProlog.queryForAll();
+    }
+
     public List<Producto> getPedidos() throws SQLException {
         List<Producto> todos = daoPro.queryForAll();
         return todos;

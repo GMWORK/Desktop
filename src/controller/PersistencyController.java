@@ -109,197 +109,223 @@ public class PersistencyController {
         return true;
     }
 
+    public void empezarActualizacion() {
+        try {
+            this.ActualizarDatosBajados(perWeb.actualizarDatos());
+        } catch (SQLException ex) {
+            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JSONException ex) {
+            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println("Actualizado con exito");
+        }
+    }
+
     public void ActualizarDatosBajados(TreeMap<String, ArrayList> map) throws SQLException {
-        Categoria cat = null;
-        DateTime ultima = DateTime.parse(getUltimaBajada());
-        for (Object obj : map.get("HoraBajada")) {
-            Horas hora = (Horas) obj;
-            hoDAO.EditarPedido(hora);
-        }
+        try {
+            Categoria cat = null;
+            DateTime ultima = DateTime.parse(getUltimaBajada());
+            for (Object obj : map.get("HoraBajada")) {
+                Horas hora = (Horas) obj;
+                hoDAO.EditarPedido(hora);
+            }
 
-        for (Object obj : map.get("Categoria")) {
-            CategoriaVista vista = (CategoriaVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I":
-                        catDAO.addCategoria(new Categoria(vista.getNombre(), vista.getDescuento()));
-                        break;
-                    case "U":
-                        Categoria catlocal = catDAO.filtrarCategoria(vista.getNombre());
-                        catlocal.setNombre(vista.getNombre());
-                        catlocal.setDescuento(vista.getDescuento());
-                        catDAO.EditarCategoria(catlocal);
-                        break;
-                    case "D":
-                        catDAO.removeCategoria(vista.getNombre());
-                        break;
-                }
-            }
-        }
-        for (Object obj : map.get("Productos")) {
-            ProductoVista vista = (ProductoVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I":
-                        Producto pro = new Producto();
-                        pro.setImg(vista.getImg());
-                        pro.setDescuento(vista.getDescuento());
-                        pro.setNombre(vista.getNombre());
-                        pro.setPrecio(vista.getPrecio());
-                        Categoria catPro = catDAO.filtrarCategoria(vista.getCategoriaid());
-                        catPro.addProducto(pro);
-                        pro.setCategoria(catPro);
-                        catDAO.EditarCategoria(cat);
-                        proDAO.addProducto(pro);
-                        break;
-                    case "U":
-                        Producto catlocal = proDAO.filtrarProducto(vista.getNombre());
-                        catlocal.setNombre(vista.getNombre());
-                        catlocal.setDescuento(vista.getDescuento());
-                        catlocal.setImg(vista.getImg());
-                        catlocal.setInhabilitats(vista.isInhabilitats());
-                        catlocal.setPrecio(vista.getPrecio());
-                        Categoria catProEdit = catDAO.filtrarCategoria(vista.getCategoriaid());
-                        cat.addProducto(catlocal);
-                        catlocal.setCategoria(catProEdit);
-                        catDAO.EditarCategoria(catProEdit);
-                        proDAO.EditarProducto(catlocal);
-                        break;
-                    case "D":
-                        proDAO.removeProducto(vista.getNombre());
-                        break;
-                }
-            }
-        }
-        for (Object obj : map.get("Usuario")) {
-            UsuarioVista vista = (UsuarioVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I": {
-                        try {
-                            usuDAO.addUsuario(new Usuario(vista.getNif(), vista.getNombre(), vista.getApellidos(), vista.getCalle(), vista.getPoblacion(), vista.isAdministrador(), vista.getUsername(), vista.getPassword()));
-                        } catch (SQLException ex) {
-                            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
-                        }
+            for (Object obj : map.get("Categoria")) {
+                CategoriaVista vista = (CategoriaVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I":
+                            catDAO.addCategoria(new Categoria(vista.getNombre(), vista.getDescuento()));
+                            break;
+                        case "U":
+                            Categoria catlocal = catDAO.filtrarCategoria(vista.getNombre());
+                            catlocal.setNombre(vista.getNombre());
+                            catlocal.setDescuento(vista.getDescuento());
+                            catDAO.EditarCategoria(catlocal);
+                            break;
+                        case "D":
+                            catDAO.removeCategoria(vista.getNombre());
+                            break;
                     }
-                    break;
-                    case "U":
-                        Usuario catlocal = usuDAO.filtrarUsuario(vista.getNif());
-                        catlocal.setNombre(vista.getNombre());
-                        catlocal.setApellidos(vista.getApellidos());
-                        catlocal.setCalle(vista.getCalle());
-                        catlocal.setPoblacion(vista.getPoblacion());
-                        catlocal.setAdministrador(vista.isAdministrador());
-                        catlocal.setUsername(vista.getUsername());
-                        catlocal.setPassword(vista.getPassword());
-                        usuDAO.EditarProducto(catlocal);
-                        break;
-                    case "D":
-                        usuDAO.removeUsuario(vista.getNombre());
-                        break;
                 }
             }
-        }
-        for (Object obj : map.get("Cliente")) {
-            ClienteVista vista = (ClienteVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I":
-                        Cliente cli = new Cliente();
-                        cli.setNif(vista.getNif());
-                        cli.setNombre(vista.getNombre());
-                        cli.setPoblacion(vista.getPoblacion());
-                        cli.setCalle(vista.getCalle());
-                        cli.setImg(vista.getImg());
-                        cli.setLatitud(vista.getLatitud());
-                        cli.setLongitud(vista.getLongitud());
-                        cli.setProximaVisita(String.valueOf(vista.getProximaVisita()));
-                        Usuario usu = usuDAO.filtrarUsuario(vista.getUsuarioid());
-                        cli.setUsu(usu);
-                        usu.addClientes(cli);
-                        usuDAO.EditarProducto(usu);
-                        cliDAO.addCliente(cli);
-                        break;
-                    case "U":
-                        Cliente catlocal = cliDAO.filtrarCliente(vista.getNif());
-                        catlocal.setNombre(vista.getNombre());
-                        catlocal.setApellidos(vista.getApellidos());
-                        catlocal.setCalle(vista.getCalle());
-                        catlocal.setPoblacion(vista.getPoblacion());
-                        catlocal.setLatitud(vista.getLatitud());
-                        catlocal.setLongitud(vista.getLongitud());
-                        catlocal.setCalle(vista.getCalle());
-                        catlocal.setPoblacion(vista.getPoblacion());
-                        catlocal.setProximaVisita(vista.getProximaVisita());
-                        Usuario usuEdit = usuDAO.filtrarUsuario(vista.getUsuarioid());
-                        catlocal.setUsu(usuEdit);
-                        usuDAO.EditarProducto(usuEdit);
-                        cliDAO.EditarCliente(catlocal);
-                        break;
-                    case "D":
-                        cliDAO.removeCliente(vista.getNombre());
-                        break;
+            for (Object obj : map.get("Productos")) {
+                ProductoVista vista = (ProductoVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I":
+                            Producto pro = new Producto();
+                            pro.setImg(vista.getImg());
+                            pro.setDescuento(vista.getDescuento());
+                            pro.setNombre(vista.getNombre());
+                            pro.setPrecio(vista.getPrecio());
+                            Categoria catPro = catDAO.filtrarCategoria(vista.getCategoriaid());
+                            catPro.addProducto(pro);
+                            pro.setCategoria(catPro);
+                            catDAO.EditarCategoria(cat);
+                            proDAO.addProducto(pro);
+                            break;
+                        case "U":
+                            Producto catlocal = proDAO.filtrarProducto(vista.getNombre());
+                            catlocal.setNombre(vista.getNombre());
+                            catlocal.setDescuento(vista.getDescuento());
+                            catlocal.setImg(vista.getImg());
+                            catlocal.setInhabilitats(vista.isInhabilitats());
+                            catlocal.setPrecio(vista.getPrecio());
+                            Categoria catProEdit = catDAO.filtrarCategoria(vista.getCategoriaid());
+                            cat.addProducto(catlocal);
+                            catlocal.setCategoria(catProEdit);
+                            catDAO.EditarCategoria(catProEdit);
+                            proDAO.EditarProducto(catlocal);
+                            break;
+                        case "D":
+                            proDAO.removeProducto(vista.getNombre());
+                            break;
+                    }
                 }
-            }
-        }
-        for (Object obj : map.get("Pedido")) {
-            PedidoVista vista = (PedidoVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I":
-                        Pedido ped = new Pedido();
-                        ped.setTotal(vista.getTotal());
-                        ped.setFechaEntrega(vista.getFechaEntrega());
-                        ped.setEstado(vista.getEstado());
-                        Cliente cli = cliDAO.filtrarCliente(vista.getClienteid());
-                        ped.setCliente(cli);
-                        cli.addPedido(ped);
-                        cliDAO.EditarCliente(cli);
-                        peDAO.addPedido(ped);
-                    case "U":
-                        Pedido catlocal = peDAO.filtrarPedido(vista.getId());
-                        catlocal.setTotal(vista.getTotal());
-                        catlocal.setFechaEntrega(vista.getFechaEntrega());
-                        catlocal.setEstado(vista.getEstado());
-                        Cliente cliEdit = cliDAO.filtrarCliente(vista.getClienteid());
-                        catlocal.setCliente(cliEdit);
-                        cliEdit.addPedido(catlocal);
-                        cliDAO.EditarCliente(cliEdit);
-                        peDAO.EditarPedido(catlocal);
-                        break;
-                    case "D":
-                        peDAO.removePedido(vista.getId());
-                        break;
-                }
-            }
-        }
-        for (Object obj : map.get("PedidoProducto")) {
-            PedidoProductoVista vista = (PedidoProductoVista) obj;
-            if (vista.getFecha().compareTo(ultima) > 0) {
-                switch (vista.getOp()) {
-                    case "I":
-                        PedidoProducto prePro = new PedidoProducto();
-                        prePro.setCantidad(Double.parseDouble(vista.getCantidad()));
-                        Pedido pe = peDAO.filtrarPedido(vista.getPedidoid());
-                        Producto pro = proDAO.filtrarProducto(vista.getProductoid());
-                        pe.addLiniaProducto(prePro);
-                        pro.addLiniaPedido(prePro);
-                        proDAO.EditarProducto(pro);
-                        peDAO.EditarPedido(pe);
-                    case "U":
-                        PedidoProducto pedProEdit = peProDAO.filtrarPedidoProductoPedido(vista.getPedidoid());
 
-                        pedProEdit.setCantidad(Double.parseDouble(vista.getCantidad()));
-                        peProDAO.EditarPedidoProducto(pedProEdit);
+            }
+
+            for (Object obj : map.get("Usuario")) {
+                UsuarioVista vista = (UsuarioVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I": {
+                            try {
+                                usuDAO.addUsuario(new Usuario(vista.getNif(), vista.getNombre(), vista.getApellidos(), vista.getCalle(), vista.getPoblacion(), vista.isAdministrador(), vista.getUsername(), vista.getPassword()));
+                            } catch (SQLException ex) {
+                                Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
                         break;
-                    case "D":
-                        PedidoProducto pedProEs = peProDAO.filtrarPedidoProductoPedido(vista.getPedidoid());
-                        peProDAO.removePedidoProductodePedido(pedProEs);
-                        break;
+                        case "U":
+                            Usuario catlocal = usuDAO.filtrarUsuario(vista.getNif());
+                            catlocal.setNombre(vista.getNombre());
+                            catlocal.setApellidos(vista.getApellidos());
+                            catlocal.setCalle(vista.getCalle());
+                            catlocal.setPoblacion(vista.getPoblacion());
+                            catlocal.setAdministrador(vista.isAdministrador());
+                            catlocal.setUsername(vista.getUsername());
+                            catlocal.setPassword(vista.getPassword());
+                            usuDAO.EditarProducto(catlocal);
+                            break;
+                        case "D":
+                            usuDAO.removeUsuario(vista.getNombre());
+                            break;
+                    }
                 }
             }
-        }
+            for (Object obj : map.get("Cliente")) {
+                ClienteVista vista = (ClienteVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I":
+                            Cliente cli = new Cliente();
+                            cli.setNif(vista.getNif());
+                            cli.setNombre(vista.getNombre());
+                            cli.setPoblacion(vista.getPoblacion());
+                            cli.setCalle(vista.getCalle());
+                            cli.setImg(vista.getImg());
+                            cli.setLatitud(vista.getLatitud());
+                            cli.setLongitud(vista.getLongitud());
+                            cli.setProximaVisita(String.valueOf(vista.getProximaVisita()));
+                            Usuario usu = usuDAO.filtrarUsuario(vista.getUsuarioid());
+                            cli.setUsu(usu);
+                            usu.addClientes(cli);
+                            usuDAO.EditarProducto(usu);
+                            cliDAO.addCliente(cli);
+                            break;
+                        case "U":
+                            Cliente catlocal = cliDAO.filtrarCliente(vista.getNif());
+                            catlocal.setNombre(vista.getNombre());
+                            catlocal.setApellidos(vista.getApellidos());
+                            catlocal.setCalle(vista.getCalle());
+                            catlocal.setPoblacion(vista.getPoblacion());
+                            catlocal.setLatitud(vista.getLatitud());
+                            catlocal.setLongitud(vista.getLongitud());
+                            catlocal.setCalle(vista.getCalle());
+                            catlocal.setPoblacion(vista.getPoblacion());
+                            catlocal.setProximaVisita(vista.getProximaVisita());
+                            Usuario usuEdit = usuDAO.filtrarUsuario(vista.getUsuarioid());
+                            catlocal.setUsu(usuEdit);
+                            usuDAO.EditarProducto(usuEdit);
+                            cliDAO.EditarCliente(catlocal);
+                            break;
+                        case "D":
+                            cliDAO.removeCliente(vista.getNombre());
+                            break;
+                    }
+                }
+            }
+            for (Object obj : map.get("Pedido")) {
+                PedidoVista vista = (PedidoVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I":
+                            Pedido ped = new Pedido();
+                            ped.setTotal(vista.getTotal());
+                            ped.setFechaEntrega(vista.getFechaEntrega());
+                            ped.setEstado(vista.getEstado());
+                            Cliente cli = cliDAO.filtrarCliente(vista.getClienteid());
+                            ped.setCliente(cli);
+                            cli.addPedido(ped);
+                            cliDAO.EditarCliente(cli);
+                            peDAO.addPedido(ped);
+                        case "U":
+                            Pedido catlocal = peDAO.filtrarPedido(vista.getId());
+                            catlocal.setTotal(vista.getTotal());
+                            catlocal.setFechaEntrega(vista.getFechaEntrega());
+                            catlocal.setEstado(vista.getEstado());
+                            Cliente cliEdit = cliDAO.filtrarCliente(vista.getClienteid());
+                            catlocal.setCliente(cliEdit);
+                            cliEdit.addPedido(catlocal);
+                            cliDAO.EditarCliente(cliEdit);
+                            peDAO.EditarPedido(catlocal);
+                            break;
+                        case "D":
+                            peDAO.removePedido(vista.getId());
+                            break;
+                    }
+                }
+            }
+            for (Object obj : map.get("PedidoProducto")) {
+                PedidoProductoVista vista = (PedidoProductoVista) obj;
+                if (vista.getFecha().compareTo(ultima) > 0) {
+                    switch (vista.getOp()) {
+                        case "I":
+                            PedidoProducto prePro = new PedidoProducto();
+                            prePro.setCantidad(Double.parseDouble(vista.getCantidad()));
+                            Pedido pe = peDAO.filtrarPedido(vista.getPedidoid());
+                            Producto pro = proDAO.filtrarProducto(vista.getProductoid());
+                            pe.addLiniaProducto(prePro);
+                            pro.addLiniaPedido(prePro);
+                            proDAO.EditarProducto(pro);
+                            peDAO.EditarPedido(pe);
+                        case "U":
+                            PedidoProducto pedProEdit = peProDAO.filtrarPedidoProductoPedido(vista.getPedidoid());
 
+                            pedProEdit.setCantidad(Double.parseDouble(vista.getCantidad()));
+                            peProDAO.EditarPedidoProducto(pedProEdit);
+                            break;
+                        case "D":
+                            PedidoProducto pedProEs = peProDAO.filtrarPedidoProductoPedido(vista.getPedidoid());
+                            peProDAO.removePedidoProductodePedido(pedProEs);
+                            break;
+                    }
+                }
+            }
+
+        } finally {
+            this.borrarlogs();
+        }
+    }
+
+    private void borrarlogs() {
+        cliCat.borrarLogs();
     }
 
     public void removeProducto(String nombre) {
@@ -391,50 +417,55 @@ public class PersistencyController {
     }
 
     public void guardarDatosBajados(TreeMap<String, ArrayList> map) throws SQLException {
-        Categoria cat = null;
-        for (Object obj : map.get("HoraBajada")) {
-            Horas hora = (Horas) obj;
-            hoDAO.addPedido(hora);
+        try {
+            Categoria cat = null;
+            for (Object obj : map.get("HoraBajada")) {
+                Horas hora = (Horas) obj;
+                hoDAO.addPedido(hora);
 
-        }
-        for (Object obj : map.get("Categoria")) {
-            cat = (Categoria) obj;
-            catDAO.addCategoria(cat);
-        }
-        for (Object obj : map.get("Productos")) {
-            Producto pro = (Producto) obj;
-            cat = catDAO.filtrarCategoria(pro.getCategoria().getNombre());
-            cat.addProducto(pro);
-            catDAO.EditarCategoria(cat);
-            proDAO.addProducto(pro);
-        }
-        for (Object obj : map.get("Usuario")) {
-            Usuario usu = (Usuario) obj;
-            usuDAO.addUsuario(usu);
-        }
-        for (Object obj : map.get("Cliente")) {
-            Cliente cli = (Cliente) obj;
-            Usuario usu = usuDAO.filtrarUsuario(cli.getUsu().getNif());
-            usu.addClientes(cli);
-            usuDAO.EditarProducto(usu);
-            cliDAO.addCliente(cli);
-        }
-        for (Object obj : map.get("Pedido")) {
-            Pedido ped = (Pedido) obj;
-            Cliente cli = cliDAO.filtrarCliente(ped.getCliente().getNif());
-            ped.setCliente(cli);
-            cliDAO.EditarCliente(cli);
-            peDAO.addPedido(ped);
-        }
-        for (Object obj : map.get("PedidoProducto")) {
-            PedidoProducto pedPro = (PedidoProducto) obj;
-            Pedido ped = peDAO.filtrarPedido(pedPro.getPedido().getId());
-            Producto pro = proDAO.filtrarProducto(pedPro.getProducto().getNombre());
-            pro.addLiniaPedido(pedPro);
-            ped.addLiniaProducto(pedPro);
-            peDAO.EditarPedido(ped);
-            proDAO.EditarProducto(pro);
-            // pepoDAO.addPedidoProducto(pedPro);
+            }
+            for (Object obj : map.get("Categoria")) {
+                cat = (Categoria) obj;
+                catDAO.addCategoria(cat);
+            }
+            for (Object obj : map.get("Productos")) {
+                Producto pro = (Producto) obj;
+                cat = catDAO.filtrarCategoria(pro.getCategoria().getNombre());
+                cat.addProducto(pro);
+                catDAO.EditarCategoria(cat);
+                proDAO.addProducto(pro);
+            }
+            for (Object obj : map.get("Usuario")) {
+                Usuario usu = (Usuario) obj;
+                usuDAO.addUsuario(usu);
+            }
+            for (Object obj : map.get("Cliente")) {
+                Cliente cli = (Cliente) obj;
+                Usuario usu = usuDAO.filtrarUsuario(cli.getUsu().getNif());
+                usu.addClientes(cli);
+                usuDAO.EditarProducto(usu);
+                cliDAO.addCliente(cli);
+            }
+            for (Object obj : map.get("Pedido")) {
+                Pedido ped = (Pedido) obj;
+                Cliente cli = cliDAO.filtrarCliente(ped.getCliente().getNif());
+                ped.setCliente(cli);
+                cliDAO.EditarCliente(cli);
+                peDAO.addPedido(ped);
+            }
+            for (Object obj : map.get("PedidoProducto")) {
+                PedidoProducto pedPro = (PedidoProducto) obj;
+                Pedido ped = peDAO.filtrarPedido(pedPro.getPedido().getId());
+                Producto pro = proDAO.filtrarProducto(pedPro.getProducto().getNombre());
+                pro.addLiniaPedido(pedPro);
+                ped.addLiniaProducto(pedPro);
+                peDAO.EditarPedido(ped);
+                proDAO.EditarProducto(pro);
+                // pepoDAO.addPedidoProducto(pedPro);
+            }
+
+        } finally {
+            this.borrarlogs();
         }
     }
     /* public TreeMap<Usuario, ArrayList<Cliente>> filtrarUsuarioClientes(String nombreUsuario, String nombreCliente) {
@@ -484,7 +515,9 @@ public class PersistencyController {
     }
 
     private String getUltimaBajada() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        return hoDAO.getUltimaBajada().getFecha();
+
     }
 
 }

@@ -5,6 +5,7 @@
  */
 package controller;
 
+import controller.utilidades.ThreadActualizarBajada;
 import controller.utilidades.ThreadSOS;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -15,7 +16,6 @@ import model.Pedido;
 import model.Producto;
 import model.Usuario;
 import org.json.JSONException;
-
 
 /**
  *
@@ -42,12 +42,21 @@ public class PersistencyWeb {
     }
 
     public TreeMap<String, ArrayList> bajarDatos() throws InterruptedException, JSONException, UnsupportedEncodingException {
-        String [] urls = new String[]{ "categoria" , "producto" ,"usuario", "cliente","pedido","productohaspedido", "date"};
+        String[] urls = new String[]{"categoria", "producto", "usuario", "cliente", "pedido", "productohaspedido", "date"};
         ThreadSOS sos = new ThreadSOS(urls);
         Thread threadsos = new Thread(sos);
         threadsos.start();
         threadsos.join();
         return sos.getSOS();
+    }
+
+    public TreeMap<String, ArrayList> actualizarDatos() throws InterruptedException, JSONException, UnsupportedEncodingException {
+        String[] urls = new String[]{"categoriasadescargar", "productosadescargar", "usuarioadescargar", "clienteadescargar", "pedidosadescargar", "pedidoproductosadescargar", "date"};
+        ThreadActualizarBajada actualizar = new ThreadActualizarBajada(urls);
+        Thread threadsos = new Thread(actualizar);
+        threadsos.start();
+        threadsos.join();
+        return actualizar.doOperation();
     }
 
     public ArrayList<Usuario> bajarUsuarios() {

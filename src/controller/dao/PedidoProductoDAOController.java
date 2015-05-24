@@ -24,6 +24,7 @@ public class PedidoProductoDAOController {
     private Dao<PedidoProductoLog, Long> daoPePolog;
 
     public PedidoProductoDAOController(OrmLitetables cliCat) {
+
         try {
             this.daoPePo = cliCat.getDAO(PedidoProducto.class);
             this.daoPePolog = cliCat.getDAO(PedidoProductoLog.class);
@@ -31,6 +32,10 @@ public class PedidoProductoDAOController {
             Logger.getLogger(PedidoProductoDAOController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    public List<PedidoProductoLog> getLog() throws SQLException {
+        return daoPePolog.queryForAll();
     }
 
     public List<PedidoProducto> mostrarPedidoProducto() throws SQLException {
@@ -42,6 +47,10 @@ public class PedidoProductoDAOController {
     }
 
     public PedidoProducto filtrarPedidoProductoPedido(int idPedido) throws SQLException {
+        return daoPePo.queryForEq("id_pedido", idPedido).get(0);
+    }
+
+    public PedidoProducto filtrarPedidoProductoPedido(long idPedido) throws SQLException {
         return daoPePo.queryForEq("id_pedido", idPedido).get(0);
     }
 

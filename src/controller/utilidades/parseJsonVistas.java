@@ -37,7 +37,7 @@ public class parseJsonVistas {
                 catv.setNombre(object.getString("nombre"));
                 catv.setOp(object.getString("op"));
                 catv.setDescuento(object.getDouble("descuento"));
-                catv.setFecha(DateTime.parse("fecha"));
+                catv.setFecha(DateTime.parse(object.getString("fecha")));
                 list.add(catv);
 
             }
@@ -59,7 +59,7 @@ public class parseJsonVistas {
                 catv.setPedidoid(object.getInt("pe"));
                 catv.setOp(object.getString("op"));
                 catv.setProductoid(object.getInt("producto_id"));
-                catv.setFecha(DateTime.parse("fecha"));
+                catv.setFecha(DateTime.parse(object.getString("fecha")));
                 list.add(catv);
 
             }

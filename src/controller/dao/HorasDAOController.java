@@ -9,6 +9,8 @@ import Gestor.OrmLitetables;
 import com.j256.ormlite.dao.Dao;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Horas;
 
 /**
@@ -36,10 +38,16 @@ public class HorasDAOController {
         return todos;
     }
 
-    public Horas getUltimaBajada() throws SQLException {
-
-        Horas client = daoHora.queryForEq("id", "1").get(0);
-        return client;
+    public Horas getUltimaBajada() {
+        Horas client = null;
+        try {
+            client = daoHora.queryForEq("id", "1").get(0);
+            return client;
+        } catch (SQLException ex) {
+            Logger.getLogger(HorasDAOController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            return client;
+        }
     }
 
     public Horas getUltimaSubida() throws SQLException {

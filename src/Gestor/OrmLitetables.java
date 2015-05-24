@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Categoria;
 import model.CategoriaLog;
 import model.Cliente;
@@ -63,6 +65,21 @@ public class OrmLitetables {
         createTriggers("pedidoProducto", "PedidoProductoLog");
     }
 
+    public void borrarLogs() {
+        try {
+            createTriggers("categoria", "CategoriaLog");
+            createTriggers("cliente", "ClienteLog");
+            createTriggers("pedido", "PedidoLog");
+            createTriggers("producto", "ProductoLog");
+            createTriggers("usuario", "UsuarioLog");
+            createTriggers("pedidoProducto", "PedidoProductoLog");
+        } catch (SQLException ex) {
+            Logger.getLogger(OrmLitetables.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(OrmLitetables.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static <T> Dao<T, Long> getDAO(Class<T> classRepresentingTable) throws SQLException {
 
         Dao<T, Long> dao = null;
@@ -75,7 +92,7 @@ public class OrmLitetables {
 
         //Class< ? extends Object > clas = Class.forName("mode.definitivo."+table.replace(0, toUpperCase())+"");
         Dao dao = null;
-        
+
         dao = getDAO(Class.forName("model." + Character.toUpperCase(table.charAt(0)) + table.substring(1) + ""));
 
         //Dao dao = getDAO(Class.forName("model.definitivo." + Character.toUpperCase(table.charAt(0)) + table.substring(1) + ""));
