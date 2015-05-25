@@ -8,19 +8,19 @@ import java.sql.Date;
 /**
  * Created by mateo on 11/05/15.
  */
-
 @DatabaseTable(tableName = "ProductoLog")
 public class ProductoLog {
+
     @DatabaseField(generatedId = true)
     private long id;
     @DatabaseField
     private String Op;
     @DatabaseField
-    private Date fecha;
+    private String fecha;
     @DatabaseField
     private long idProducto;
 
-    public ProductoLog(String Op, Date fecha, long idProducto) {
+    public ProductoLog(String Op, String fecha, long idProducto) {
         this.Op = Op;
         this.fecha = fecha;
         this.idProducto = idProducto;
@@ -45,11 +45,11 @@ public class ProductoLog {
         this.Op = operacion;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public void setFecha(Date fecha) {
+    public void setFecha(String fecha) {
         this.fecha = fecha;
     }
 
@@ -63,11 +63,11 @@ public class ProductoLog {
 
     @Override
     public String toString() {
-        return "ProductoLog{" +
-                "id=" + id +
-                ", operacion='" + Op + '\'' +
-                ", fecha=" + fecha +
-                ", idProducto=" + idProducto +
-                '}';
+        return "ProductoLog{"
+                + "id=" + id
+                + ", operacion='" + Op + '\''
+                + ", fecha=" + fecha
+                + ", idProducto=" + idProducto
+                + '}';
     }
 }

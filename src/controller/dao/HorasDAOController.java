@@ -25,7 +25,7 @@ public class HorasDAOController {
         this.daoHora = clidao.getDAO(Horas.class);
     }
 
-    public void addPedido(Horas cat) {
+    public void addHora(Horas cat) {
         try {
             daoHora.createOrUpdate(cat);
         } catch (SQLException ex) {
@@ -50,10 +50,36 @@ public class HorasDAOController {
         }
     }
 
-    public Horas getUltimaSubida() throws SQLException {
+    public void guardarHoraBajada(Horas hora) {
+        Horas uBa = getUltimaBajada();
+        try {
+            uBa.setFecha(hora.getFecha());
+            daoHora.update(uBa);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(HorasDAOController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void guardarHoraSubidacd(Horas hora) {
+        Horas uSu = getUltimaSubida();
+        try {
+            uSu.setFecha(hora.getFecha());
+            daoHora.update(uSu);
+
+        } catch (SQLException ex) {
+            Logger.getLogger(HorasDAOController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Horas getUltimaSubida() {
         Horas hora = null;
         try {
-            hora = daoHora.queryForEq("id", "2").get(0);
+            try {
+                hora = daoHora.queryForEq("id", "2").get(0);
+            } catch (SQLException ex) {
+                Logger.getLogger(HorasDAOController.class.getName()).log(Level.SEVERE, null, ex);
+            }
             if (hora != null) {
                 return hora;
             } else {

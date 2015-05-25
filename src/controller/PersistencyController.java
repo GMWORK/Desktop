@@ -14,6 +14,7 @@ import controller.dao.PedidoDAOController;
 import controller.dao.PedidoProductoDAOController;
 import controller.dao.ProductoDAOController;
 import controller.dao.UsuarioDAOController;
+import controller.utilidades.MontarSubida;
 import java.awt.Rectangle;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -75,6 +76,9 @@ public class PersistencyController {
         if (usuDAO == null) {
             usuDAO = new UsuarioDAOController(cliCat);
         }
+        if (peProDAO == null) {
+            peProDAO = new PedidoProductoDAOController(cliCat);
+        }
         if (proDAO == null) {
             proDAO = new ProductoDAOController(cliCat);
         }
@@ -122,6 +126,7 @@ public class PersistencyController {
             Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             System.out.println("Actualizado con exito");
+
         }
     }
 
@@ -131,7 +136,7 @@ public class PersistencyController {
             DateTime ultima = DateTime.parse(getUltimaBajada());
             for (Object obj : map.get("HoraBajada")) {
                 Horas hora = (Horas) obj;
-                hoDAO.EditarPedido(hora);
+                hoDAO.guardarHoraBajada(hora);
             }
 
             for (Object obj : map.get("Categoria")) {
@@ -421,7 +426,7 @@ public class PersistencyController {
             Categoria cat = null;
             for (Object obj : map.get("HoraBajada")) {
                 Horas hora = (Horas) obj;
-                hoDAO.addPedido(hora);
+                this.guardarUltimaBajada();
 
             }
             for (Object obj : map.get("Categoria")) {
@@ -518,6 +523,40 @@ public class PersistencyController {
 
         return hoDAO.getUltimaBajada().getFecha();
 
+    }
+
+    private void guardarUltimaBajada() {
+        hoDAO.guardarHoraBajada(perWeb.getHora());
+
+    }
+
+    private void guardarUltimaSubida() {
+        hoDAO.guardarHoraSubidacd(perWeb.getHora());
+
+    }
+
+    private String getUltimaSubida() {
+
+        return hoDAO.getUltimaBajada().getFecha();
+
+    }
+
+    public void sincronizarDatos() {
+        try {
+            TreeMap<String, List<String[]>> map = new TreeMap<String, List<String[]>>();
+            map.put("categoria", MontarSubida.montarCategoria(catDAO, getUltimaSubida()));
+            map.put("productos", MontarSubida.montarProducto(proDAO, getUltimaSubida()));
+            map.put("usuario", MontarSubida.montarUsuario(usuDAO, getUltimaSubida()));
+            map.put("cliente", MontarSubida.montarCliente(cliDAO, getUltimaSubida()));
+            map.put("pedido", MontarSubida.montarPedido(peDAO, getUltimaSubida()));
+            map.put("pedidoproducto", MontarSubida.montarPedidoProducto(peProDAO, getUltimaSubida()));
+            this.guardarUltimaSubida();
+            perWeb.subirDatosLocales(map);
+        } catch (SQLException ex) {
+            Logger.getLogger(PersistencyController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            cliCat.borrarLogs();
+        }
     }
 
 }

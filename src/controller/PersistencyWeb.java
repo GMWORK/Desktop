@@ -5,13 +5,20 @@
  */
 package controller;
 
+import controller.utilidades.MontarSubida;
 import controller.utilidades.ThreadActualizarBajada;
+import controller.utilidades.ThreadGetHoraServidor;
 import controller.utilidades.ThreadSOS;
+import controller.utilidades.ThreadSubirInformacion;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Categoria;
 import model.Cliente;
+import model.Horas;
 import model.Pedido;
 import model.Producto;
 import model.Usuario;
@@ -50,6 +57,22 @@ public class PersistencyWeb {
         return sos.getSOS();
     }
 
+    public void subirDatosLocales(TreeMap<String, List<String[]>> map) {
+
+        try {
+            ThreadSubirInformacion subir = new ThreadSubirInformacion(map);
+            Thread thread = new Thread(subir);
+            thread.start();
+            thread.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PersistencyWeb.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            System.out.println("Subir Completado");
+
+        }
+
+    }
+
     public TreeMap<String, ArrayList> actualizarDatos() throws InterruptedException, JSONException, UnsupportedEncodingException {
         String[] urls = new String[]{"categoriasadescargar", "productosadescargar", "usuarioadescargar", "clienteadescargar", "pedidosadescargar", "pedidoproductosadescargar", "date"};
         ThreadActualizarBajada actualizar = new ThreadActualizarBajada(urls);
@@ -57,6 +80,21 @@ public class PersistencyWeb {
         threadsos.start();
         threadsos.join();
         return actualizar.doOperation();
+    }
+
+    public Horas getHora() {
+        Horas hora = null;
+        try {
+            ThreadGetHoraServidor thread = new ThreadGetHoraServidor();
+            Thread th = new Thread(thread);
+            th.start();
+            th.join();
+            hora =  thread.getHora().get(0);
+
+        } catch (InterruptedException ex) {
+            Logger.getLogger(PersistencyWeb.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return hora;
     }
 
     public ArrayList<Usuario> bajarUsuarios() {

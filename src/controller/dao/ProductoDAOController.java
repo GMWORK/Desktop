@@ -51,6 +51,10 @@ public class ProductoDAOController extends AbstractDAO {
         return daoPro.queryForEq("id", id).get(0);
     }
 
+    public Producto filtrarProducto(long id) throws SQLException {
+        return daoPro.queryForEq("id", id).get(0);
+    }
+
     public void addProducto(Producto cat) throws SQLException {
         daoPro.createOrUpdate(cat);
     }

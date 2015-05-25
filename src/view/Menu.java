@@ -358,12 +358,11 @@ public class Menu extends javax.swing.JFrame {
             System.out.println(b.length);
             Class<?> c = Class.forName("model." + itemSelect.getSelectedItem());
 
-           
             dog = c.newInstance();
 
             if (dog instanceof Usuario) {
                 refreshTableEmpresa(per.mostrarUsuarios());
-                String[] labels = new String[]{"nif", "nombre", "apellidos", "calle", "poblacion", "administrador", "username", "password","baja"};
+                String[] labels = new String[]{"nif", "nombre", "apellidos", "calle", "poblacion", "administrador", "username", "password", "baja"};
                 Dropdownlist2.removeAllItems();
                 for (String dato : labels) {
                     Dropdownlist2.addItem(dato);
@@ -413,7 +412,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        per.sincronizarDatos();        // TODO add your handling code here:
         //Categoria, producto, usuario, cliente, pedido, pedidoProducto
 
 

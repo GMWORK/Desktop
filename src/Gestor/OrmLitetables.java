@@ -67,15 +67,19 @@ public class OrmLitetables {
 
     public void borrarLogs() {
         try {
-            createTriggers("categoria", "CategoriaLog");
-            createTriggers("cliente", "ClienteLog");
-            createTriggers("pedido", "PedidoLog");
-            createTriggers("producto", "ProductoLog");
-            createTriggers("usuario", "UsuarioLog");
-            createTriggers("pedidoProducto", "PedidoProductoLog");
+            TableUtils.dropTable(connectionSource, PedidoLog.class, true);
+            TableUtils.dropTable(connectionSource, ClienteLog.class, true);
+            TableUtils.dropTable(connectionSource, ProductoLog.class, true);
+            TableUtils.dropTable(connectionSource, CategoriaLog.class, true);
+            TableUtils.dropTable(connectionSource, UsuarioLog.class, true);
+            TableUtils.dropTable(connectionSource, PedidoProductoLog.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, PedidoLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, ClienteLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, ProductoLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, CategoriaLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, UsuarioLog.class);
+            TableUtils.createTableIfNotExists(connectionSource, PedidoProductoLog.class);
         } catch (SQLException ex) {
-            Logger.getLogger(OrmLitetables.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ClassNotFoundException ex) {
             Logger.getLogger(OrmLitetables.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
